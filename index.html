@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exchange Request</title>
+<style>
+  :root {
+    --navy: #1B2430;
+    --bg: #F5F6F2;
+    --card: #FFFFFF;
+    --steel: #5A6B73;
+    --steel-light: #DDE2E0;
+    --amber: #C9722C;
+    --amber-dark: #A85A1F;
+    --green: #3F7A5C;
+    --red: #B3492F;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--navy);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px 64px;
+  }
+
+  .topbar {
+    width: 100%;
+    max-width: 520px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .topbar .mark {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    color: var(--navy);
+  }
+
+  .topbar .tag {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 12px;
+    color: var(--steel);
+    background: var(--steel-light);
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 520px;
+    background: var(--card);
+    border: 1px solid var(--steel-light);
+    border-radius: 6px;
+    padding: 32px 28px;
+  }
+
+  h1 {
+    font-size: 22px;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .sub {
+    color: var(--steel);
+    font-size: 14px;
+    margin: 0 0 28px;
+    line-height: 1.5;
+    max-width: 42ch;
+  }
+
+  fieldset {
+    border: none;
+    padding: 0;
+    margin: 0 0 22px;
+  }
+
+  legend {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    padding: 0 0 10px;
+    width: 100%;
+    border-bottom: 1px solid var(--steel-light);
+    margin-bottom: 14px;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--navy);
+  }
+
+  .hint {
+    font-size: 12px;
+    color: var(--steel);
+    margin-top: 4px;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid var(--steel-light);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--navy);
+    font-family: inherit;
+  }
+
+  input:focus,
+  select:focus {
+    outline: 2px solid var(--amber);
+    outline-offset: 1px;
+    background: #fff;
+  }
+
+  select:disabled,
+  input:disabled {
+    opacity: 0.6;
+  }
+
+  .row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  button.submit {
+    width: 100%;
+    padding: 13px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+
+  button.submit:hover {
+    background: #101720;
+  }
+
+  button.submit:disabled {
+    background: var(--steel);
+    cursor: not-allowed;
+  }
+
+  .error-text {
+    color: var(--red);
+    font-size: 12px;
+    margin-top: 4px;
+    display: none;
+  }
+
+  .field.invalid input,
+  .field.invalid select {
+    border-color: var(--red);
+  }
+
+  .field.invalid .error-text {
+    display: block;
+  }
+
+  .status-banner {
+    display: none;
+    font-size: 13px;
+    padding: 10px 12px;
+    border-radius: 4px;
+    margin-bottom: 18px;
+  }
+
+  .status-banner.error {
+    display: block;
+    background: #FBEAE5;
+    color: var(--red);
+    border: 1px solid #EFC5B7;
+  }
+
+  .status-banner.info {
+    display: block;
+    background: #EEF1F5;
+    color: var(--steel);
+    border: 1px solid var(--steel-light);
+  }
+
+  /* Confirmation view */
+  .confirm {
+    display: none;
+    text-align: left;
+  }
+
+  .confirm.active { display: block; }
+  .form-view.hidden { display: none; }
+
+  .confirm .stamp {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--green);
+    background: #E8F2ED;
+    padding: 4px 10px;
+    border-radius: 3px;
+    margin-bottom: 16px;
+  }
+
+  .confirm h1 { margin-bottom: 8px; }
+
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+  }
+
+  .summary-table td {
+    padding: 8px 0;
+    font-size: 14px;
+    border-bottom: 1px solid var(--steel-light);
+    vertical-align: top;
+  }
+
+  .summary-table td:first-child {
+    color: var(--steel);
+    width: 44%;
+    font-weight: 600;
+  }
+
+  .again-btn {
+    background: none;
+    border: 1px solid var(--steel-light);
+    color: var(--navy);
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .again-btn:hover {
+    background: var(--bg);
+  }
+
+  @media (max-width: 480px) {
+    .row2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="mark">Exchange Request</span>
+  <span class="tag">SELF-SERVICE</span>
+</div>
+
+<div class="card">
+
+  <!-- FORM VIEW -->
+  <div class="form-view" id="formView">
+    <h1>Request an exchange</h1>
+    <p class="sub">Fill this in at the counter instead of waiting for staff. Your request is logged immediately and reviewed from there.</p>
+
+    <div class="status-banner" id="statusBanner"></div>
+
+    <form id="exchangeForm" novalidate>
+
+      <fieldset>
+        <legend>Your details</legend>
+        <div class="row2">
+          <div class="field" id="field-sapId">
+            <label for="sapId">SAP ID</label>
+            <input type="text" id="sapId" name="sapId">
+            <div class="error-text">Enter your SAP ID.</div>
+          </div>
+          <div class="field" id="field-staffName">
+            <label for="staffName">Staff name</label>
+            <input type="text" id="staffName" name="staffName" autocomplete="name">
+            <div class="error-text">Enter your name.</div>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field" id="field-serviceNumber">
+            <label for="serviceNumber">Service number</label>
+            <input type="text" id="serviceNumber" name="serviceNumber">
+            <div class="error-text">Enter your service number.</div>
+          </div>
+          <div class="field" id="field-ftpt">
+            <label for="ftpt">FT / PT</label>
+            <select id="ftpt" name="ftpt">
+              <option value="">Select</option>
+              <option value="FT">FT</option>
+              <option value="PT">PT</option>
+            </select>
+            <div class="error-text">Select FT or PT.</div>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field" id="field-div">
+            <label for="div">Div</label>
+            <input type="text" id="div" name="div">
+            <div class="error-text">Enter your division.</div>
+          </div>
+          <div class="field" id="field-worksite">
+            <label for="worksite">Current worksite</label>
+            <input type="text" id="worksite" name="worksite">
+            <div class="error-text">Enter your current worksite.</div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>What are you requesting?</legend>
+        <div class="field" id="field-item">
+          <label for="item">Item</label>
+          <select id="item" name="item" disabled>
+            <option value="">Loading items…</option>
+          </select>
+          <div class="error-text">Select an item.</div>
+        </div>
+        <div class="field" id="field-qty">
+          <label for="qty">Quantity</label>
+          <input type="number" id="qty" name="qty" min="1" value="1">
+          <div class="error-text">Enter a quantity of at least 1.</div>
+        </div>
+      </fieldset>
+
+      <button type="submit" class="submit" id="submitBtn">Submit request</button>
+    </form>
+  </div>
+
+  <!-- CONFIRMATION VIEW -->
+  <div class="confirm" id="confirmView">
+    <span class="stamp">Request logged</span>
+    <h1>You're done here</h1>
+    <table class="summary-table" id="summaryTable"></table>
+    <button class="again-btn" id="againBtn">Submit another request</button>
+  </div>
+
+</div>
+
+<script>
+  // ---- CONFIGURATION ----
+  // Replace with your deployed Google Apps Script Web App URL (see apps-script.gs / SETUP.md)
+  const ENDPOINT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+  const form = document.getElementById('exchangeForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const statusBanner = document.getElementById('statusBanner');
+  const formView = document.getElementById('formView');
+  const confirmView = document.getElementById('confirmView');
+  const summaryTable = document.getElementById('summaryTable');
+  const againBtn = document.getElementById('againBtn');
+  const itemSelect = document.getElementById('item');
+
+  function showBanner(message, type) {
+    statusBanner.textContent = message;
+    statusBanner.className = 'status-banner ' + type;
+  }
+
+  function hideBanner() {
+    statusBanner.className = 'status-banner';
+  }
+
+  // ---- Load material list from the Materials Database sheet ----
+  async function loadMaterials() {
+    if (ENDPOINT_URL.includes('PASTE_YOUR')) {
+      showBanner('This page isn\'t connected to a sheet yet — set ENDPOINT_URL in index.html (see SETUP.md).', 'error');
+      itemSelect.innerHTML = '<option value="">Not connected</option>';
+      return;
+    }
+
+    try {
+      const res = await fetch(ENDPOINT_URL);
+      const data = await res.json();
+      const materials = data.materials || [];
+
+      if (materials.length === 0) {
+        itemSelect.innerHTML = '<option value="">No items found</option>';
+        return;
+      }
+
+      itemSelect.innerHTML = '<option value="">Select an item</option>' +
+        materials.map(m => `<option value="${escapeHtml(m.name)}">${escapeHtml(m.name)}</option>`).join('');
+      itemSelect.disabled = false;
+
+    } catch (err) {
+      showBanner('Could not load the item list. Refresh to try again.', 'error');
+      itemSelect.innerHTML = '<option value="">Failed to load</option>';
+    }
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+  }
+
+  loadMaterials();
+
+  function setInvalid(fieldId, invalid) {
+    const el = document.getElementById(fieldId);
+    if (!el) return;
+    el.classList.toggle('invalid', invalid);
+  }
+
+  function validate() {
+    let ok = true;
+    const checks = [
+      ['field-sapId', document.getElementById('sapId').value.trim()],
+      ['field-staffName', document.getElementById('staffName').value.trim()],
+      ['field-serviceNumber', document.getElementById('serviceNumber').value.trim()],
+      ['field-ftpt', document.getElementById('ftpt').value],
+      ['field-div', document.getElementById('div').value.trim()],
+      ['field-worksite', document.getElementById('worksite').value.trim()],
+      ['field-item', document.getElementById('item').value],
+      ['field-qty', document.getElementById('qty').value && Number(document.getElementById('qty').value) >= 1],
+    ];
+
+    checks.forEach(([id, val]) => {
+      const invalid = !val;
+      setInvalid(id, invalid);
+      if (invalid) ok = false;
+    });
+
+    return ok;
+  }
+
+  function buildPayload() {
+    return {
+      sapId: document.getElementById('sapId').value.trim(),
+      staffName: document.getElementById('staffName').value.trim(),
+      serviceNumber: document.getElementById('serviceNumber').value.trim(),
+      ftpt: document.getElementById('ftpt').value,
+      div: document.getElementById('div').value.trim(),
+      worksite: document.getElementById('worksite').value.trim(),
+      itemName: document.getElementById('item').value,
+      qty: document.getElementById('qty').value,
+    };
+  }
+
+  function showConfirmation(payload) {
+    formView.classList.add('hidden');
+    confirmView.classList.add('active');
+
+    const rows = [
+      ['SAP ID', payload.sapId],
+      ['Staff name', payload.staffName],
+      ['Service number', payload.serviceNumber],
+      ['FT/PT', payload.ftpt],
+      ['Div', payload.div],
+      ['Worksite', payload.worksite],
+      ['Item', payload.itemName],
+      ['Quantity', payload.qty],
+    ];
+
+    summaryTable.innerHTML = rows.map(([k, v]) =>
+      `<tr><td>${k}</td><td>${v}</td></tr>`
+    ).join('');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideBanner();
+
+    if (!validate()) return;
+
+    const payload = buildPayload();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+
+    try {
+      if (ENDPOINT_URL.includes('PASTE_YOUR')) {
+        throw new Error('CONFIG');
+      }
+
+      // No explicit Content-Type header: keeps this a "simple request" so the
+      // browser doesn't need a CORS preflight, which Apps Script can't answer.
+      const res = await fetch(ENDPOINT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json();
+
+      if (result.status !== 'ok') {
+        throw new Error(result.message || 'Unknown error');
+      }
+
+      showConfirmation(payload);
+      form.reset();
+      itemSelect.value = '';
+
+    } catch (err) {
+      if (err.message === 'CONFIG') {
+        showBanner('This page isn\'t connected to a sheet yet — set ENDPOINT_URL in index.html (see SETUP.md).', 'error');
+      } else {
+        showBanner('Could not submit: ' + err.message, 'error');
+      }
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit request';
+    }
+  });
+
+  againBtn.addEventListener('click', () => {
+    confirmView.classList.remove('active');
+    formView.classList.remove('hidden');
+  });
+</script>
+
+</body>
+</html>
