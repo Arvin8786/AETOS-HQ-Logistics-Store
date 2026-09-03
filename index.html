@@ -75,7 +75,7 @@
     }
 
     .brand-group { display: flex; align-items: center; gap: 16px; }
-    .brand-logo { height: 46px; width: auto; display: block; }
+    .brand-logo { height: 60px; width: auto; display: block; }
     .brand-divider { width: 1px; height: 34px; background: var(--line); }
     .brand-title { font-size: 15px; font-weight: 700; color: var(--ink-900); letter-spacing: -0.01em; }
     .brand-subtitle { font-size: 12px; color: var(--ink-500); margin-top: 1px; }
@@ -113,7 +113,7 @@
     /* ---------- Main ---------- */
     main {
       width: 100%;
-      max-width: 620px;
+      max-width: 720px;
       margin: 0 auto;
       padding: 44px 20px 64px;
       flex-grow: 1;
@@ -131,7 +131,7 @@
       border: 1px solid var(--line);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-card);
-      padding: 30px 30px 32px;
+      padding: 38px 40px 42px;
     }
 
     .alert {
@@ -161,14 +161,14 @@
       margin-bottom: 18px;
     }
 
-    .field { margin-bottom: 16px; }
+    .field { margin-bottom: 19px; }
     .field:last-child { margin-bottom: 0; }
 
     label {
       display: block;
-      font-size: 12.5px;
+      font-size: 13.5px;
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 7px;
       color: var(--ink-700);
     }
     label .req { color: var(--red-600); margin-left: 2px; }
@@ -178,8 +178,8 @@
     input[type="number"],
     select {
       width: 100%;
-      padding: 10px 13px;
-      font-size: 14px;
+      padding: 13px 15px;
+      font-size: 15px;
       border: 1px solid var(--line);
       border-radius: var(--radius-sm);
       background: #FCFCFD;
@@ -197,8 +197,8 @@
 
     select:disabled, input:disabled { opacity: 0.55; }
 
-    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .row-item-qty { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .row-item-qty { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
 
     .error-text {
       color: var(--red-600);
@@ -222,12 +222,12 @@
 
     button.submit {
       width: 100%;
-      padding: 13px;
+      padding: 15px;
       background: var(--ink-900);
       color: #fff;
       border: none;
       border-radius: var(--radius-sm);
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
       margin-top: 22px;
@@ -492,7 +492,7 @@
     </div>
 
     <div class="card">
-      <div class="alert error" id="formAlert"></div>
+      <div class="alert" id="formAlert"></div>
 
       <form id="requestForm" novalidate>
 
@@ -503,12 +503,12 @@
           <div class="row2">
             <div class="field" id="field-sapId">
               <label for="sapId">SAP ID<span class="req">*</span></label>
-              <input type="text" id="sapId" placeholder="e.g. 25014932">
+              <input type="text" id="sapId" inputmode="numeric" maxlength="8">
               <div class="error-text">Enter your SAP ID.</div>
             </div>
             <div class="field" id="field-staffName">
               <label for="staffName">Staff name<span class="req">*</span></label>
-              <input type="text" id="staffName" autocomplete="name" placeholder="As per NRIC">
+              <input type="text" id="staffName" autocomplete="name">
               <div class="error-text">Enter your name.</div>
             </div>
           </div>
@@ -516,7 +516,7 @@
           <div class="row2">
             <div class="field" id="field-serviceNumber">
               <label for="serviceNumber">Service number<span class="req">*</span></label>
-              <input type="text" id="serviceNumber" placeholder="e.g. T1234">
+              <input type="text" id="serviceNumber">
               <div class="error-text">Enter your service number.</div>
             </div>
             <div class="field" id="field-ftpt">
@@ -533,19 +533,19 @@
           <div class="row2">
             <div class="field" id="field-div">
               <label for="div">Division<span class="req">*</span></label>
-              <input type="text" id="div" placeholder="e.g. IESS">
+              <input type="text" id="div">
               <div class="error-text">Enter your division.</div>
             </div>
             <div class="field" id="field-worksite">
               <label for="worksite">Current worksite<span class="req">*</span></label>
-              <input type="text" id="worksite" placeholder="e.g. AETOS HQ">
+              <input type="text" id="worksite">
               <div class="error-text">Enter your current worksite.</div>
             </div>
           </div>
 
           <div class="field" id="field-contactNumber">
             <label for="contactNumber">Contact number<span class="req">*</span></label>
-            <input type="tel" id="contactNumber" placeholder="e.g. 9123 4567">
+            <input type="tel" id="contactNumber">
             <div class="error-text">Enter a contact number.</div>
           </div>
         </fieldset>
@@ -661,7 +661,7 @@
 <footer>&copy; AETOS Holdings Pte. Ltd. &middot; Internal CSS Store Logistics Portal</footer>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOz3xNynJ6ypQ3prjiGP_ciaCS41h95Ut78wk8DGO565K6cWb7xp9xUv2_6K58Mac8fg/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx2K6kAA0LiMQQpbQOGP4OJrHVhKD5A-gJLG7Sm7o3RXPq25wCvGY75Vv9GCwXjkFGhjw/exec";
 
   let requestType = 'Exchange';
 
@@ -701,10 +701,61 @@
     itemLegend.textContent = copy[requestType].legend;
     personnelFieldset.style.display = requestType === 'Exchange' ? 'block' : 'none';
     entityFieldset.style.display = requestType === 'Purchase' ? 'block' : 'none';
+
+    if (requestType === 'Purchase') {
+      document.getElementById('entity').value = '';
+      renderMaterialOptions([], 'Select entity first');
+    } else {
+      renderMaterialOptions(allMaterials, 'Select an item');
+    }
+
     showView('requestView');
   });
 
+  // ---- Entity -> category eligibility ----
+  // AGS can only buy items tagged SO; ASM only APO; AH only AH; items tagged
+  // with all three ("APO / SO / AH") are purchasable by any entity.
+  const ENTITY_CODE = {
+    'AETOS Holdings': 'AH',
+    'AETOS Security Management': 'APO',
+    'AETOS Guards Services': 'SO',
+  };
+
+  function categoryCodes(category) {
+    return String(category || '').split('/').map(s => s.trim().toUpperCase()).filter(Boolean);
+  }
+
+  function materialsForEntity(entity) {
+    const code = ENTITY_CODE[entity];
+    if (!code) return [];
+    return allMaterials.filter(m => categoryCodes(m.category).includes(code));
+  }
+
+  document.getElementById('entity').addEventListener('change', (e) => {
+    const entity = e.target.value;
+    document.getElementById('materialSelect').value = '';
+    if (!entity) {
+      renderMaterialOptions([], 'Select entity first');
+      return;
+    }
+    const filtered = materialsForEntity(entity);
+    renderMaterialOptions(filtered, filtered.length ? 'Select an item' : 'No items available for this entity');
+  });
+
   // ---- Load materials ----
+  let allMaterials = [];
+
+  function renderMaterialOptions(list, placeholder) {
+    if (list.length === 0) {
+      materialSelect.innerHTML = `<option value="">${placeholder}</option>`;
+      materialSelect.disabled = true;
+      return;
+    }
+    materialSelect.innerHTML = `<option value="">${placeholder}</option>` +
+      list.map(m => `<option value="${escapeHtml(m.name)}">${escapeHtml(m.name)}</option>`).join('');
+    materialSelect.disabled = false;
+  }
+
   async function loadMaterials() {
     try {
       const res = await fetch(`${APPS_SCRIPT_URL}?action=getMaterials`);
@@ -715,9 +766,8 @@
         return;
       }
 
-      materialSelect.innerHTML = '<option value="">Select an item</option>' +
-        materials.map(m => `<option value="${escapeHtml(m.name)}">${escapeHtml(m.name)}</option>`).join('');
-      materialSelect.disabled = false;
+      allMaterials = materials;
+      renderMaterialOptions(allMaterials, 'Select an item');
 
     } catch (err) {
       formAlert.textContent = 'Could not load the item list. Refresh to try again.';
@@ -735,9 +785,30 @@
   loadMaterials();
 
   // ---- Validation ----
-  function setInvalid(fieldId, invalid) {
+  const SAP_ID_PATTERN = /^25\d{6}$/; // 8 digits, must start with 25
+
+  function setInvalid(fieldId, invalid, message) {
     const el = document.getElementById(fieldId);
-    if (el) el.classList.toggle('invalid', invalid);
+    if (!el) return;
+    el.classList.toggle('invalid', invalid);
+    if (invalid && message) {
+      const msgEl = el.querySelector('.error-text');
+      if (msgEl) msgEl.textContent = message;
+    }
+  }
+
+  function validateSapId() {
+    const value = document.getElementById('sapId').value.trim();
+    if (!value) {
+      setInvalid('field-sapId', true, 'Enter your SAP ID.');
+      return false;
+    }
+    if (!SAP_ID_PATTERN.test(value)) {
+      setInvalid('field-sapId', true, 'SAP ID must be 8 digits starting with 25 (e.g. 25012345).');
+      return false;
+    }
+    setInvalid('field-sapId', false);
+    return true;
   }
 
   function validate() {
@@ -748,8 +819,9 @@
     ];
 
     if (requestType === 'Exchange') {
+      if (!validateSapId()) ok = false;
+
       checks = checks.concat([
-        ['field-sapId', document.getElementById('sapId').value.trim()],
         ['field-staffName', document.getElementById('staffName').value.trim()],
         ['field-serviceNumber', document.getElementById('serviceNumber').value.trim()],
         ['field-ftpt', document.getElementById('ftpt').value],
