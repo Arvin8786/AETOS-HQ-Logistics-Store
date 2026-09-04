@@ -370,39 +370,29 @@
     .lookup-row button:hover { background: var(--brand-700); }
     .lookup-row button:disabled { background: var(--ink-300); cursor: not-allowed; }
 
-    .lookup-result { margin-top: 26px; display: none; }
-    .lookup-result.active { display: block; }
+    .lookup-result { margin-top: 22px; display: flex; flex-direction: column; gap: 12px; }
 
-    .stepper { display: flex; align-items: flex-start; margin-bottom: 26px; }
-    .step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
-    .step .dot {
-      width: 26px; height: 26px; border-radius: 50%;
-      background: var(--line);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700; color: var(--ink-500);
-      z-index: 1;
+    .record-card {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
     }
-    .step .lbl { font-size: 11px; font-weight: 600; color: var(--ink-500); margin-top: 8px; text-align: center; }
-    .step .connector {
-      position: absolute; top: 13px; left: 50%; width: 100%; height: 2px;
-      background: var(--line); z-index: 0;
+    .record-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .record-code { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: var(--ink-900); }
+    .record-type {
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--ink-500); background: var(--line-soft); padding: 3px 8px; border-radius: 5px; margin-left: 8px;
     }
-    .step:first-child .connector { display: none; }
+    .status-pill { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+    .status-pill.Pending { color: var(--amber-600); background: var(--amber-50); }
+    .status-pill.Approved { color: var(--green-600); background: var(--green-50); }
+    .status-pill.Rejected { color: var(--red-600); background: var(--red-50); }
+    .status-pill.OutOfStock { color: #6938EF; background: #F4F3FF; }
 
-    .step.done .dot { background: var(--brand-600); color: #fff; }
-    .step.done .connector { background: var(--brand-600); }
-    .step.done .lbl { color: var(--ink-900); }
-
-    .step.approved .dot { background: var(--green-600); color: #fff; }
-    .step.approved .connector { background: var(--green-600); }
-    .step.approved .lbl { color: var(--ink-900); }
-
-    .step.rejected .dot { background: var(--red-600); color: #fff; }
-    .step.rejected .connector { background: var(--red-600); }
-    .step.rejected .lbl { color: var(--ink-900); }
-
-    .step.pending .dot { background: var(--amber-50); color: var(--amber-600); border: 2px solid var(--amber-600); }
-    .step.pending .lbl { color: var(--ink-900); }
+    .record-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
+    .record-row span:first-child { color: var(--ink-500); }
+    .record-row span:last-child { font-weight: 600; text-align: right; }
 
     .result-card {
       background: var(--bg);
@@ -496,8 +486,8 @@
 
       <form id="requestForm" novalidate>
 
-        <!-- Exchange-only: personnel details -->
-        <fieldset id="personnelFieldset">
+        <!-- Shared: identity (both Exchange and Purchase) -->
+        <fieldset id="identityFieldset">
           <legend>YOUR DETAILS</legend>
 
           <div class="row2">
@@ -512,6 +502,17 @@
               <div class="error-text">Enter your name.</div>
             </div>
           </div>
+
+          <div class="field" id="field-contactNumber">
+            <label for="contactNumber">Contact number<span class="req">*</span></label>
+            <input type="tel" id="contactNumber">
+            <div class="error-text">Enter a contact number.</div>
+          </div>
+        </fieldset>
+
+        <!-- Exchange-only: additional details -->
+        <fieldset id="exchangeExtraFieldset">
+          <legend>ADDITIONAL DETAILS</legend>
 
           <div class="row2">
             <div class="field" id="field-serviceNumber">
@@ -542,18 +543,12 @@
               <div class="error-text">Enter your current worksite.</div>
             </div>
           </div>
-
-          <div class="field" id="field-contactNumber">
-            <label for="contactNumber">Contact number<span class="req">*</span></label>
-            <input type="tel" id="contactNumber">
-            <div class="error-text">Enter a contact number.</div>
-          </div>
         </fieldset>
 
         <!-- Purchase-only: entity -->
         <fieldset id="entityFieldset" style="display:none;">
           <legend>ENTITY</legend>
-          <div class="helper-note">Purchase requests only need the item, quantity, and which entity is buying — no personnel details required.</div>
+          <div class="helper-note">Your SAP ID, name, and contact number are used to verify entity eligibility.</div>
           <div class="field" id="field-entity">
             <label for="entity">Entity<span class="req">*</span></label>
             <select id="entity">
@@ -615,27 +610,24 @@
   <!-- STATUS TRACKER VIEW -->
   <div class="view" id="statusView">
     <div class="intro">
-      <h1>Track a request</h1>
-      <p>Enter the request number you received when you submitted.</p>
+      <h1>Track your requests</h1>
+      <p>Enter your SAP ID to see all your submitted requests — Exchange and Purchase.</p>
     </div>
 
     <div class="card">
       <div class="lookup-row">
-        <input type="text" id="lookupInput" placeholder="CSS-20260902-0001">
+        <input type="text" id="lookupInput" inputmode="numeric" maxlength="8" placeholder="25012345">
         <button type="button" id="lookupBtn">Search</button>
       </div>
 
-      <div class="lookup-result" id="lookupResult">
-        <div class="stepper" id="stepper"></div>
-        <div class="result-card" id="lookupTable"></div>
-      </div>
+      <div class="lookup-result" id="lookupResult"></div>
 
       <div class="empty-state" id="notFound">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="11" cy="11" r="7" stroke="#98A2B3" stroke-width="1.6"/>
           <path d="M20 20l-4-4" stroke="#98A2B3" stroke-width="1.6" stroke-linecap="round"/>
         </svg>
-        <div>No request found with that number.<br>Double-check it matches exactly, including the CSS- prefix.</div>
+        <div>No requests found for that SAP ID.<br>Double-check it matches exactly (8 digits, starting with 25).</div>
       </div>
     </div>
   </div>
@@ -661,17 +653,17 @@
 <footer>&copy; AETOS Holdings Pte. Ltd. &middot; Internal CSS Store Logistics Portal</footer>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx2K6kAA0LiMQQpbQOGP4OJrHVhKD5A-gJLG7Sm7o3RXPq25wCvGY75Vv9GCwXjkFGhjw/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxnb-1tQuaRjxxXA-pmaRecFfy0h7ZNivMkpon2cprbRb_P1Ega02gWde8kYlP39osRRA/exec";
 
   let requestType = 'Exchange';
 
   const copy = {
     Exchange: { title: 'New exchange request', sub: 'Swap out uniform or equipment already issued to you.', legend: 'WHAT ARE YOU REQUESTING' },
-    Purchase: { title: 'New purchase request', sub: 'Buy a new item outright — no personnel details needed.', legend: 'ITEM' },
+    Purchase: { title: 'New purchase request', sub: 'Buy a new item outright for one of the entities below.', legend: 'ITEM' },
   };
 
   const tabNav = document.getElementById('tabNav');
-  const personnelFieldset = document.getElementById('personnelFieldset');
+  const exchangeExtraFieldset = document.getElementById('exchangeExtraFieldset');
   const entityFieldset = document.getElementById('entityFieldset');
   const introTitle = document.getElementById('introTitle');
   const introSub = document.getElementById('introSub');
@@ -699,7 +691,7 @@
     introTitle.textContent = copy[requestType].title;
     introSub.textContent = copy[requestType].sub;
     itemLegend.textContent = copy[requestType].legend;
-    personnelFieldset.style.display = requestType === 'Exchange' ? 'block' : 'none';
+    exchangeExtraFieldset.style.display = requestType === 'Exchange' ? 'block' : 'none';
     entityFieldset.style.display = requestType === 'Purchase' ? 'block' : 'none';
 
     if (requestType === 'Purchase') {
@@ -813,21 +805,21 @@
 
   function validate() {
     let ok = true;
+    if (!validateSapId()) ok = false;
+
     let checks = [
       ['field-material', document.getElementById('materialSelect').value],
       ['field-qty', document.getElementById('qty').value && Number(document.getElementById('qty').value) >= 1],
+      ['field-staffName', document.getElementById('staffName').value.trim()],
+      ['field-contactNumber', document.getElementById('contactNumber').value.trim()],
     ];
 
     if (requestType === 'Exchange') {
-      if (!validateSapId()) ok = false;
-
       checks = checks.concat([
-        ['field-staffName', document.getElementById('staffName').value.trim()],
         ['field-serviceNumber', document.getElementById('serviceNumber').value.trim()],
         ['field-ftpt', document.getElementById('ftpt').value],
         ['field-div', document.getElementById('div').value.trim()],
         ['field-worksite', document.getElementById('worksite').value.trim()],
-        ['field-contactNumber', document.getElementById('contactNumber').value.trim()],
       ]);
     } else {
       checks.push(['field-entity', document.getElementById('entity').value]);
@@ -847,17 +839,17 @@
       materialName: document.getElementById('materialSelect').value,
       qty: document.getElementById('qty').value,
       requestType: requestType,
+      sapId: document.getElementById('sapId').value.trim(),
+      staffName: document.getElementById('staffName').value.trim(),
+      contactNumber: document.getElementById('contactNumber').value.trim(),
     };
 
     if (requestType === 'Exchange') {
       return Object.assign(base, {
-        sapId: document.getElementById('sapId').value.trim(),
-        staffName: document.getElementById('staffName').value.trim(),
         serviceNumber: document.getElementById('serviceNumber').value.trim(),
         ftpt: document.getElementById('ftpt').value,
         div: document.getElementById('div').value.trim(),
         worksite: document.getElementById('worksite').value.trim(),
-        contactNumber: document.getElementById('contactNumber').value.trim(),
       });
     }
 
@@ -883,6 +875,8 @@
         ]
       : [
           ['Request type', 'Purchase'],
+          ['Staff name', p.staffName],
+          ['SAP ID', p.sapId],
           ['Entity', p.entity],
           ['Item', p.materialName],
           ['Quantity', p.qty],
@@ -940,7 +934,7 @@
 
     const rows = requestType === 'Exchange'
       ? [['Staff name', payload.staffName], ['Item', payload.materialName], ['Quantity', payload.qty]]
-      : [['Entity', payload.entity], ['Item', payload.materialName], ['Quantity', payload.qty]];
+      : [['Staff name', payload.staffName], ['Entity', payload.entity], ['Item', payload.materialName], ['Quantity', payload.qty]];
 
     document.getElementById('successSummary').innerHTML = rows.map(([k, v]) =>
       `<div class="result-row"><span>${k}</span><span>${v}</span></div>`
@@ -963,74 +957,55 @@
     showView('requestView');
   });
 
-  // ---- Status tracker ----
+  // ---- Track by SAP ID ----
   const lookupBtn = document.getElementById('lookupBtn');
   const lookupInput = document.getElementById('lookupInput');
   const lookupResult = document.getElementById('lookupResult');
   const notFound = document.getElementById('notFound');
-  const stepper = document.getElementById('stepper');
-  const lookupTable = document.getElementById('lookupTable');
 
-  function renderStepper(status) {
-    const s = status; // Pending | Approved | Rejected
-    let step3Class = 'pending', step3Label = 'Awaiting decision', step3Dot = '3';
-    if (s === 'Approved') { step3Class = 'approved'; step3Label = 'Approved'; step3Dot = '✓'; }
-    if (s === 'Rejected') { step3Class = 'rejected'; step3Label = 'Rejected'; step3Dot = '✕'; }
+  function renderRecords(requests) {
+    lookupResult.innerHTML = requests.map(r => {
+      const statusClass = r.status === 'Out of Stock' ? 'OutOfStock' : r.status;
+      const rows = [['Item', r.materialName], ['Quantity', r.qty]];
+      if (r.requestType === 'Purchase' && r.entity) rows.push(['Entity', r.entity]);
 
-    stepper.innerHTML = `
-      <div class="step done">
-        <div class="dot">✓</div>
-        <div class="lbl">Submitted</div>
-      </div>
-      <div class="step done">
-        <div class="connector"></div>
-        <div class="dot">✓</div>
-        <div class="lbl">Under review</div>
-      </div>
-      <div class="step ${step3Class}">
-        <div class="connector"></div>
-        <div class="dot">${step3Dot}</div>
-        <div class="lbl">${step3Label}</div>
-      </div>
-    `;
+      return `
+        <div class="record-card">
+          <div class="record-top">
+            <div>
+              <span class="record-code">${r.requestId}</span>
+              <span class="record-type">${r.requestType}</span>
+            </div>
+            <span class="status-pill ${statusClass}">${r.status}</span>
+          </div>
+          ${rows.map(([k, v]) => `<div class="record-row"><span>${k}</span><span>${v}</span></div>`).join('')}
+        </div>
+      `;
+    }).join('');
   }
 
   async function checkStatus() {
     const value = lookupInput.value.trim();
-    lookupResult.classList.remove('active');
+    lookupResult.innerHTML = '';
     notFound.style.display = 'none';
     if (!value) return;
 
     lookupBtn.disabled = true;
-    lookupBtn.textContent = 'Checking…';
+    lookupBtn.textContent = 'Searching…';
 
     try {
-      const res = await fetch(`${APPS_SCRIPT_URL}?action=checkStatus&requestId=${encodeURIComponent(value)}`);
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=getBySapId&sapId=${encodeURIComponent(value)}`);
       const data = await res.json();
 
-      if (!data.found) {
+      if (!data.found || !data.requests || data.requests.length === 0) {
         notFound.style.display = 'block';
         return;
       }
 
-      renderStepper(data.status);
-
-      const rows = [
-        ['Request number', data.requestId],
-        ['Request type', data.requestType],
-        ['Item', data.materialName],
-        ['Quantity', data.qty],
-      ];
-      if (data.requestType === 'Purchase' && data.entity) rows.splice(2, 0, ['Entity', data.entity]);
-
-      lookupTable.innerHTML = rows.map(([k, v]) =>
-        `<div class="result-row"><span>${k}</span><span>${v}</span></div>`
-      ).join('');
-
-      lookupResult.classList.add('active');
+      renderRecords(data.requests);
 
     } catch (err) {
-      notFound.querySelector('div').textContent = 'Could not check status right now. Please try again.';
+      notFound.querySelector('div').textContent = 'Could not check records right now. Please try again.';
       notFound.style.display = 'block';
     } finally {
       lookupBtn.disabled = false;
