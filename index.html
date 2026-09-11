@@ -568,7 +568,7 @@
         <!-- Shared: entity (used for item eligibility AND to tag your unique Emp ID) -->
         <fieldset id="entityFieldset">
           <legend>ENTITY</legend>
-          <div class="helper-note">Your entity determines which items you're eligible to request. Together with your SAP ID and service number, it's also used to verify your identity when you track your requests later.</div>
+          <div class="helper-note">For Purchase requests, your entity determines which items you're eligible to buy. Together with your SAP ID and service number, it's also used to verify your identity when you track your requests later.</div>
           <div class="field" id="field-entity">
             <label for="entity">Entity<span class="req">*</span></label>
             <select id="entity">
@@ -698,7 +698,9 @@
       </div>
 
       <div class="notice-box">
-        <strong>Please note:</strong> For all approved Purchase and Exchange requests, kindly arrange for a representative to attend the store and collect the item by the next working day. Requests not collected within this timeframe cannot be guaranteed, as stock availability and store conditions are subject to change at any time. Checking your request status here before making a trip also helps avoid an unnecessary visit to the store for an Exchange item that may no longer be in stock.
+        <strong>Please note:</strong> For all approved Purchase and Exchange requests, kindly arrange for a representative to attend the store and collect the item by the next working day. Requests not collected within this timeframe cannot be guaranteed, as stock availability is subject to change at any time. Checking your request status here before making a trip also helps avoid an unnecessary visit to the store for an item that may no longer be in stock.
+        <br><br>
+        Please avoid scheduling collections during Thursday and Friday morning sessions, as these times are reserved for SO/APO onboarding.
       </div>
     </div>
   </div>
@@ -774,8 +776,10 @@
   // ---- Entity -> category eligibility ----
   // AGS can only buy items tagged SO; ASM only APO; AH only AH; items tagged
   // with all three ("APO / SO / AH") are purchasable by any entity. This
-  // filter now applies to Exchange requests too, since Entity is captured
-  // up front for both request types.
+  // only applies to Purchase requests — Exchange items are drawn from the
+  // full catalog regardless of entity (the Materials Database's category
+  // tags don't cover every exchange-only item, so filtering Exchange by
+  // entity was hiding items that should have been selectable).
   const ENTITY_CODE = {
     'AETOS Holdings': 'AH',
     'AETOS Security Management': 'APO',
@@ -793,8 +797,14 @@
   }
 
   function refreshMaterialsForCurrentEntity() {
-    const entity = document.getElementById('entity').value;
     materialSelect.value = '';
+
+    if (requestType === 'Exchange') {
+      renderMaterialOptions(allMaterials, allMaterials.length ? 'Select an item' : 'No items found');
+      return;
+    }
+
+    const entity = document.getElementById('entity').value;
     if (!entity) {
       renderMaterialOptions([], 'Select entity first');
       return;
