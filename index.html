@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CSS Store Portal — AETOS</title>
+  <title>Logistics Central Store Portal — AETOS</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -568,7 +568,7 @@
         <!-- Shared: entity (used for item eligibility AND to tag your unique Emp ID) -->
         <fieldset id="entityFieldset">
           <legend>ENTITY</legend>
-          <div class="helper-note">For Purchase requests, your entity determines which items you're eligible to buy. Together with your SAP ID and service number, it's also used to verify your identity when you track your requests later.</div>
+          <div class="helper-note">Your entity determines which items you're eligible to request. Together with your SAP ID and service number, it's also used to verify your identity when you track your requests later.</div>
           <div class="field" id="field-entity">
             <label for="entity">Entity<span class="req">*</span></label>
             <select id="entity">
@@ -774,12 +774,11 @@
   });
 
   // ---- Entity -> category eligibility ----
-  // AGS can only buy items tagged SO; ASM only APO; AH only AH; items tagged
-  // with all three ("APO / SO / AH") are purchasable by any entity. This
-  // only applies to Purchase requests — Exchange items are drawn from the
-  // full catalog regardless of entity (the Materials Database's category
-  // tags don't cover every exchange-only item, so filtering Exchange by
-  // entity was hiding items that should have been selectable).
+  // AGS can only request items tagged SO; ASM only APO; AH only AH; items
+  // tagged with all three ("APO / SO / AH") are eligible for any entity.
+  // This applies to BOTH Purchase and Exchange requests — every item in
+  // the Materials Database needs a Category tag for its eligible
+  // entity/entities, or it simply won't appear for anyone.
   const ENTITY_CODE = {
     'AETOS Holdings': 'AH',
     'AETOS Security Management': 'APO',
@@ -798,11 +797,6 @@
 
   function refreshMaterialsForCurrentEntity() {
     materialSelect.value = '';
-
-    if (requestType === 'Exchange') {
-      renderMaterialOptions(allMaterials, allMaterials.length ? 'Select an item' : 'No items found');
-      return;
-    }
 
     const entity = document.getElementById('entity').value;
     if (!entity) {
