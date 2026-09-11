@@ -10,51 +10,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 
   <style>
-    /* ============================================================
-       FUTURISTIC AETOS LIGHT BLUE THEME
-       ============================================================ */
     :root {
-      --aetos-deep: #1A365D;
-      --aetos-blue: #2A4A7F;
-      --aetos-accent: #3B82F6;
-      --aetos-glow: #60A5FA;
-      --aetos-sky: #DBEAFE;
-      --aetos-white: #FFFFFF;
-      --aetos-light: #EFF6FF;
-      --aetos-gray: #94A3B8;
-      --aetos-border: rgba(255, 255, 255, 0.12);
-      --glass-bg: rgba(255, 255, 255, 0.08);
-      --glass-border: rgba(255, 255, 255, 0.15);
-      --shadow-glow: 0 20px 40px -12px rgba(26, 54, 93, 0.5);
-      --radius-lg: 20px;
-      --radius-md: 14px;
-      --radius-sm: 10px;
-      --transition: 0.25s cubic-bezier(0.2, 0.9, 0.4, 1);
+      --ink-900: #0F1729;
+      --ink-700: #344054;
+      --ink-500: #667085;
+      --ink-300: #98A2B3;
+      --line: #E4E7EC;
+      --line-soft: #EEF1F5;
+      --surface: #FFFFFF;
+      --bg: #F7F8FA;
 
-      /* Keep legacy vars for compatibility */
-      --ink-900: #1A365D;
-      --ink-700: #D1DFFF;
-      --ink-500: #94A3B8;
-      --ink-300: #64748B;
-      --line: rgba(255, 255, 255, 0.12);
-      --line-soft: rgba(255, 255, 255, 0.08);
-      --surface: rgba(255, 255, 255, 0.08);
-      --bg: #EFF6FF;
+      --brand-600: #00A8E8;
+      --brand-700: #0086BA;
+      --brand-50: #E6F7FF;
+      --brand-100: #CDEFFF;
 
-      --brand-600: #3B82F6;
-      --brand-700: #2563EB;
-      --brand-50: rgba(59, 130, 246, 0.12);
-      --brand-100: rgba(59, 130, 246, 0.20);
+      --green-600: #17B26A;
+      --green-50: #EDFCF2;
+      --amber-600: #F79009;
+      --amber-50: #FFFAEB;
+      --red-600: #F04438;
+      --red-50: #FEF3F2;
 
-      --green-600: #34D399;
-      --green-50: rgba(52, 211, 153, 0.12);
-      --amber-600: #FBBF24;
-      --amber-50: rgba(251, 191, 36, 0.12);
-      --red-600: #F87171;
-      --red-50: rgba(248, 113, 113, 0.12);
-
-      --shadow-card: var(--shadow-glow);
-      --shadow-pop: 0 40px 80px -20px rgba(0, 0, 0, 0.3);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-card: 0 1px 2px rgba(16,24,40,0.04), 0 4px 16px rgba(16,24,40,0.06);
+      --shadow-pop: 0 4px 6px rgba(16,24,40,0.05), 0 20px 40px rgba(16,24,40,0.14);
     }
 
     * { box-sizing: border-box; }
@@ -63,61 +45,24 @@
     body {
       margin: 0;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      color: #FFFFFF;
-      background: linear-gradient(145deg, #1A365D 0%, #2A4A7F 40%, #3B82F6 100%);
+      color: var(--ink-900);
+      background: var(--bg);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* animated grid overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* floating gradient orbs */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 20%, rgba(96, 165, 250, 0.10) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 80%, rgba(26, 54, 93, 0.20) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
     .accent-strip {
       height: 3px;
-      background: linear-gradient(90deg, var(--aetos-accent), var(--aetos-glow), #93C5FD, var(--aetos-accent));
-      background-size: 300% 100%;
-      animation: shimmer 6s infinite alternate;
-      position: relative;
-      z-index: 2;
-    }
-
-    @keyframes shimmer {
-      0% { background-position: 0% 0%; }
-      100% { background-position: 100% 0%; }
+      background: linear-gradient(90deg, var(--brand-600), #37D6FF, var(--brand-600));
+      background-size: 200% 100%;
     }
 
     /* ---------- Header ---------- */
     header {
-      background: rgba(26, 54, 93, 0.75);
-      backdrop-filter: blur(16px) saturate(1.3);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius-lg);
-      margin: 20px 32px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
       padding: 18px 32px;
       display: flex;
       align-items: center;
@@ -125,247 +70,193 @@
       gap: 20px;
       flex-wrap: wrap;
       position: sticky;
-      top: 16px;
+      top: 0;
       z-index: 50;
-      box-shadow: var(--shadow-glow);
     }
 
-    .brand-group { display: flex; align-items: center; gap: 18px; }
-    .brand-logo { height: 60px; width: auto; display: block; filter: drop-shadow(0 0 12px rgba(59, 130, 246, 0.3)); }
-    .brand-divider { width: 1px; height: 34px; background: var(--aetos-border); }
-    .brand-title {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #FFFFFF 60%, #93C5FD);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .brand-subtitle { font-size: 12px; color: var(--aetos-gray); margin-top: 1px; }
+    .brand-group { display: flex; align-items: center; gap: 16px; }
+    .brand-logo { height: 60px; width: auto; display: block; }
+    .brand-divider { width: 1px; height: 34px; background: var(--line); }
+    .brand-title { font-size: 15px; font-weight: 700; color: var(--ink-900); letter-spacing: -0.01em; }
+    .brand-subtitle { font-size: 12px; color: var(--ink-500); margin-top: 1px; }
 
     nav.tabs {
       display: flex;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.06);
+      gap: 4px;
+      background: var(--bg);
       padding: 4px;
       border-radius: 999px;
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(4px);
+      border: 1px solid var(--line);
     }
 
     .tab-btn {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
+      gap: 7px;
+      padding: 9px 16px;
       border: none;
       background: transparent;
       border-radius: 999px;
       font-family: inherit;
       font-size: 13px;
       font-weight: 600;
-      color: var(--aetos-gray);
+      color: var(--ink-500);
       cursor: pointer;
-      transition: var(--transition);
+      transition: background 0.15s ease, color 0.15s ease;
       white-space: nowrap;
     }
 
-    .tab-btn svg { flex-shrink: 0; stroke: currentColor; }
-    .tab-btn:hover { color: #FFFFFF; background: rgba(255, 255, 255, 0.08); }
-    .tab-btn.active {
-      background: linear-gradient(135deg, var(--aetos-accent), #2563EB);
-      color: #FFFFFF;
-      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
-    }
+    .tab-btn svg { flex-shrink: 0; }
+    .tab-btn:hover { color: var(--ink-700); }
+    .tab-btn.active { background: var(--ink-900); color: #fff; }
 
     /* ---------- Main ---------- */
     main {
       width: 100%;
       max-width: 720px;
       margin: 0 auto;
-      padding: 32px 20px 64px;
+      padding: 44px 20px 64px;
       flex-grow: 1;
-      position: relative;
-      z-index: 2;
     }
 
-    .view { display: none; animation: fadeSlide 0.3s ease; }
+    .view { display: none; }
     .view.active { display: block; }
 
-    @keyframes fadeSlide {
-      0% { opacity: 0; transform: translateY(12px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
     .intro { margin-bottom: 24px; }
-    .intro h1 {
-      font-size: 26px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      background: linear-gradient(135deg, #FFFFFF, #93C5FD);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin: 0 0 6px;
-    }
-    .intro p { font-size: 14px; color: rgba(255,255,255,0.7); margin: 0; line-height: 1.5; }
+    .intro h1 { font-size: 21px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 6px; }
+    .intro p { font-size: 13.5px; color: var(--ink-500); margin: 0; line-height: 1.5; }
 
     .card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(16px) saturate(1.3);
-      border: 1px solid var(--glass-border);
+      background: var(--surface);
+      border: 1px solid var(--line);
       border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-glow);
+      box-shadow: var(--shadow-card);
       padding: 38px 40px 42px;
-      transition: var(--transition);
     }
-    .card:hover { border-color: rgba(255, 255, 255, 0.20); }
 
     .alert {
       display: none;
       font-size: 13px;
-      padding: 14px 18px;
+      padding: 12px 14px;
       border-radius: var(--radius-sm);
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       line-height: 1.5;
     }
-    .alert.error {
-      display: block;
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.30);
-      color: #FCA5A5;
-    }
+    .alert.error { display: block; background: var(--red-50); color: #B42318; border: 1px solid #FDA29B; }
 
-    fieldset { border: none; padding: 0; margin: 0 0 28px; }
+    fieldset { border: none; padding: 0; margin: 0 0 26px; }
     fieldset:last-of-type { margin-bottom: 0; }
 
     legend {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.6);
-      padding: 0 0 14px;
+      letter-spacing: 0.06em;
+      color: var(--ink-900);
+      padding: 0 0 12px;
       width: 100%;
-      border-bottom: 1px solid var(--glass-border);
-      margin-bottom: 22px;
+      border-bottom: 1px solid var(--line-soft);
+      margin-bottom: 18px;
     }
 
-    .field { margin-bottom: 20px; }
+    .field { margin-bottom: 19px; }
     .field:last-child { margin-bottom: 0; }
 
     label {
       display: block;
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 600;
-      margin-bottom: 8px;
-      color: #D1DFFF;
+      margin-bottom: 7px;
+      color: var(--ink-700);
     }
-    label .req { color: #F87171; margin-left: 3px; }
+    label .req { color: var(--red-600); margin-left: 2px; }
 
     input[type="text"],
     input[type="tel"],
     input[type="number"],
     select {
       width: 100%;
-      padding: 14px 16px;
+      padding: 13px 15px;
       font-size: 15px;
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--line);
       border-radius: var(--radius-sm);
-      background: rgba(255, 255, 255, 0.06);
-      color: #FFFFFF;
+      background: #FCFCFD;
+      color: var(--ink-900);
       font-family: inherit;
-      transition: var(--transition);
-      backdrop-filter: blur(4px);
+      transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
     }
 
     input[type="file"] {
       width: 100%;
       padding: 11px 13px;
       font-size: 13px;
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--line);
       border-radius: var(--radius-sm);
-      background: rgba(255, 255, 255, 0.06);
-      color: #D1DFFF;
+      background: #FCFCFD;
+      color: var(--ink-700);
       font-family: inherit;
-      backdrop-filter: blur(4px);
     }
-
-    input::placeholder,
-    select option { color: rgba(255,255,255,0.5); }
-    select option { background: #1A365D; color: #fff; }
 
     input:focus, select:focus {
       outline: none;
-      border-color: var(--aetos-accent);
-      background: rgba(255, 255, 255, 0.10);
-      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.20);
+      border-color: var(--brand-600);
+      background: #fff;
+      box-shadow: 0 0 0 3.5px var(--brand-100);
     }
 
-    select:disabled, input:disabled { opacity: 0.5; cursor: not-allowed; }
+    select:disabled, input:disabled { opacity: 0.55; }
 
-    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-    .row-item-qty { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .row-item-qty { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
 
     .error-text {
-      color: #F87171;
-      font-size: 12px;
-      margin-top: 6px;
+      color: var(--red-600);
+      font-size: 11.5px;
+      margin-top: 5px;
       display: none;
     }
-    .field.invalid input, .field.invalid select {
-      border-color: #F87171;
-      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.20);
-    }
+    .field.invalid input, .field.invalid select { border-color: var(--red-600); }
     .field.invalid .error-text { display: block; }
 
     .helper-note {
       font-size: 12.5px;
-      color: #BFDBFE;
-      background: rgba(59, 130, 246, 0.12);
-      border: 1px solid rgba(59, 130, 246, 0.25);
+      color: var(--ink-500);
+      background: var(--brand-50);
+      border: 1px solid var(--brand-100);
       border-radius: var(--radius-sm);
-      padding: 12px 16px;
-      margin-bottom: 22px;
+      padding: 10px 13px;
+      margin-bottom: 20px;
       line-height: 1.5;
-      backdrop-filter: blur(4px);
     }
 
     button.submit {
       width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, var(--aetos-accent), #2563EB);
+      padding: 15px;
+      background: var(--ink-900);
+      color: #fff;
       border: none;
       border-radius: var(--radius-sm);
       font-size: 15px;
       font-weight: 700;
-      color: #FFFFFF;
       cursor: pointer;
-      margin-top: 28px;
+      margin-top: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      transition: var(--transition);
-      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
+      gap: 8px;
+      transition: background 0.15s ease, transform 0.1s ease;
     }
-    button.submit:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(59, 130, 246, 0.50);
-      background: linear-gradient(135deg, #60A5FA, #3B82F6);
-    }
-    button.submit:active { transform: translateY(0px); }
-    button.submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+    button.submit:hover { background: var(--brand-700); }
+    button.submit:active { transform: translateY(1px); }
+    button.submit:disabled { background: var(--ink-300); cursor: not-allowed; }
 
     .spinner {
-      width: 16px; height: 16px;
-      border: 2px solid rgba(255,255,255,0.2);
+      width: 15px; height: 15px;
+      border: 2px solid rgba(255,255,255,0.35);
       border-radius: 50%;
-      border-top-color: #FFFFFF;
+      border-top-color: #fff;
       animation: spin 0.7s linear infinite;
       display: none;
     }
@@ -374,76 +265,60 @@
     /* ---------- Modal ---------- */
     .modal-backdrop {
       position: fixed; inset: 0;
-      background: rgba(26, 54, 93, 0.7);
-      backdrop-filter: blur(8px);
+      background: rgba(15,23,41,0.55);
+      backdrop-filter: blur(2px);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 200;
-      padding: 24px;
+      padding: 20px;
     }
     .modal-backdrop.active { display: flex; }
 
     .modal-box {
-      background: rgba(26, 54, 93, 0.92);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
+      background: #fff;
       border-radius: var(--radius-lg);
-      max-width: 440px;
+      max-width: 420px;
       width: 100%;
-      padding: 32px;
+      padding: 26px;
       box-shadow: var(--shadow-pop);
-      animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: modalIn 0.18s cubic-bezier(0.16,1,0.3,1);
     }
-    @keyframes modalIn {
-      0% { transform: translateY(20px) scale(0.96); opacity: 0; }
-      100% { transform: translateY(0) scale(1); opacity: 1; }
-    }
+    @keyframes modalIn { from { transform: translateY(8px) scale(0.98); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
 
-    .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 2px; color: #FFFFFF; }
-    .modal-sub { font-size: 13px; color: var(--aetos-gray); margin-bottom: 20px; }
+    .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .modal-sub { font-size: 12.5px; color: var(--ink-500); margin-bottom: 18px; }
 
     .modal-summary {
-      background: rgba(255, 255, 255, 0.06);
+      background: var(--bg);
       border-radius: var(--radius-sm);
-      padding: 16px 18px;
-      margin-bottom: 24px;
-      border: 1px solid var(--glass-border);
+      padding: 14px 16px;
+      margin-bottom: 20px;
     }
-    .modal-summary .row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13.5px;
-      padding: 6px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      gap: 12px;
-    }
-    .modal-summary .row:last-child { border-bottom: none; }
-    .modal-summary .row span:first-child { color: var(--aetos-gray); flex-shrink: 0; }
-    .modal-summary .row span:last-child { font-weight: 600; color: #FFFFFF; text-align: right; }
+    .modal-summary .row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; gap: 12px; }
+    .modal-summary .row span:first-child { color: var(--ink-500); flex-shrink: 0; }
+    .modal-summary .row span:last-child { font-weight: 600; text-align: right; }
 
-    .modal-actions { display: flex; gap: 12px; }
+    .modal-actions { display: flex; gap: 10px; }
     .btn-ghost {
       flex: 1;
-      background: rgba(255, 255, 255, 0.06);
-      color: #D1DFFF;
+      background: var(--bg);
+      color: var(--ink-700);
       font-weight: 600;
-      font-size: 14px;
-      padding: 12px;
-      border: 1px solid var(--glass-border);
+      font-size: 13.5px;
+      padding: 11px;
+      border: 1px solid var(--line);
       border-radius: var(--radius-sm);
       cursor: pointer;
-      transition: var(--transition);
     }
-    .btn-ghost:hover { background: rgba(255, 255, 255, 0.12); }
-    .modal-actions .submit { margin-top: 0; flex: 1.4; padding: 12px; }
+    .btn-ghost:hover { background: var(--line-soft); }
+    .modal-actions .submit { margin-top: 0; flex: 1.3; }
 
     /* ---------- Success screen ---------- */
     .success-icon {
-      width: 56px; height: 56px;
+      width: 52px; height: 52px;
       border-radius: 50%;
-      background: rgba(52, 211, 153, 0.15);
-      border: 1px solid rgba(52, 211, 153, 0.30);
+      background: var(--green-50);
       display: flex; align-items: center; justify-content: center;
       margin-bottom: 18px;
     }
@@ -452,188 +327,152 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px dashed var(--aetos-accent);
+      background: var(--bg);
+      border: 1px dashed var(--line);
       border-radius: var(--radius-md);
-      padding: 16px 20px;
-      margin: 18px 0 24px;
-      backdrop-filter: blur(4px);
+      padding: 14px 16px;
+      margin: 18px 0 22px;
     }
     .req-chip .code {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 600;
-      color: #93C5FD;
-      letter-spacing: 0.5px;
+      color: var(--ink-900);
     }
     .req-chip button {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--glass-border);
-      border-radius: 8px;
-      padding: 6px 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 6px 12px;
       font-size: 12px;
       font-weight: 600;
-      color: #D1DFFF;
+      color: var(--ink-700);
       cursor: pointer;
-      transition: var(--transition);
     }
-    .req-chip button:hover { background: rgba(255, 255, 255, 0.16); }
+    .req-chip button:hover { background: var(--line-soft); }
 
     .again-btn {
       width: 100%;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--glass-border);
-      color: #FFFFFF;
-      padding: 14px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--ink-900);
+      padding: 12px;
       border-radius: var(--radius-sm);
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
       cursor: pointer;
-      transition: var(--transition);
     }
-    .again-btn:hover { background: rgba(255, 255, 255, 0.12); }
+    .again-btn:hover { background: var(--line-soft); }
 
     /* ---------- Status tracker ---------- */
-    .lookup-row { display: flex; gap: 12px; margin-bottom: 8px; }
+    .lookup-row { display: flex; gap: 10px; margin-bottom: 4px; }
     .lookup-row input { flex: 1; }
     .lookup-row button {
-      padding: 12px 28px;
+      padding: 10px 20px;
       border-radius: var(--radius-sm);
       border: none;
-      background: linear-gradient(135deg, var(--aetos-accent), #2563EB);
-      color: #FFFFFF;
+      background: var(--ink-900);
+      color: #fff;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13.5px;
       cursor: pointer;
-      transition: var(--transition);
       white-space: nowrap;
-      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.30);
     }
-    .lookup-row button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.45);
-    }
-    .lookup-row button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+    .lookup-row button:hover { background: var(--brand-700); }
+    .lookup-row button:disabled { background: var(--ink-300); cursor: not-allowed; }
 
     .lookup-hint {
       font-size: 11.5px;
-      color: rgba(255,255,255,0.5);
+      color: var(--ink-500);
       margin: 8px 0 0;
       line-height: 1.5;
     }
 
-    .lookup-result { margin-top: 24px; display: flex; flex-direction: column; gap: 14px; }
+    .lookup-result { margin-top: 22px; display: flex; flex-direction: column; gap: 12px; }
 
     .verified-name {
       font-size: 12.5px;
-      color: rgba(255,255,255,0.6);
+      color: var(--ink-500);
     }
-    .verified-name strong { color: #FFFFFF; }
+    .verified-name strong { color: var(--ink-900); }
 
     .record-card {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--glass-border);
+      background: var(--bg);
+      border: 1px solid var(--line);
       border-radius: var(--radius-md);
-      padding: 18px 20px;
-      backdrop-filter: blur(4px);
+      padding: 16px 18px;
     }
-    .record-card.Pending { border-color: rgba(251, 191, 36, 0.25); background: rgba(251, 191, 36, 0.06); }
-    .record-card.Approved { border-color: rgba(52, 211, 153, 0.25); background: rgba(52, 211, 153, 0.06); }
-    .record-card.Rejected { border-color: rgba(248, 113, 113, 0.25); background: rgba(248, 113, 113, 0.06); }
-    .record-card.OutOfStock { border-color: rgba(167, 139, 250, 0.25); background: rgba(167, 139, 250, 0.06); }
-
-    .record-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .record-code {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      font-weight: 600;
-      color: #93C5FD;
-    }
+    .record-card.Pending { background: var(--bg); border-color: var(--line); }
+    .record-card.Approved { background: var(--green-50); border-color: #A6F4C5; }
+    .record-card.Rejected { background: var(--red-50); border-color: #FDA29B; }
+    .record-card.OutOfStock { background: var(--brand-50); border-color: var(--brand-100); }
+    .record-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .record-code { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: var(--ink-900); }
     .record-type {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
-      color: var(--aetos-gray); background: rgba(255, 255, 255, 0.08); padding: 3px 10px; border-radius: 20px; margin-left: 10px;
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--ink-500); background: var(--line-soft); padding: 3px 8px; border-radius: 5px; margin-left: 8px;
     }
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 14px;
-      border-radius: 999px;
-      white-space: nowrap;
-    }
-    .status-pill.Pending { color: #FBBF24; background: rgba(251, 191, 36, 0.15); }
-    .status-pill.Approved { color: #34D399; background: rgba(52, 211, 153, 0.15); }
-    .status-pill.Rejected { color: #F87171; background: rgba(248, 113, 113, 0.15); }
-    .status-pill.OutOfStock { color: #A78BFA; background: rgba(167, 139, 250, 0.15); }
+    .status-pill { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+    .status-pill.Pending { color: var(--amber-600); background: var(--amber-50); }
+    .status-pill.Approved { color: var(--green-600); background: var(--green-50); }
+    .status-pill.Rejected { color: var(--red-600); background: var(--red-50); }
+    .status-pill.OutOfStock { color: var(--brand-700); background: var(--brand-100); }
 
-    .record-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      padding: 4px 0;
-      gap: 12px;
-    }
-    .record-row span:first-child { color: var(--aetos-gray); flex-shrink: 0; }
-    .record-row span:last-child { font-weight: 600; color: #D1DFFF; text-align: right; }
-    .record-row a { color: var(--aetos-accent); font-weight: 600; text-decoration: none; }
+    .record-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; gap: 12px; }
+    .record-row span:first-child { color: var(--ink-500); flex-shrink: 0; }
+    .record-row span:last-child { font-weight: 600; text-align: right; }
+    .record-row a { color: var(--brand-600); font-weight: 600; text-decoration: none; }
     .record-row a:hover { text-decoration: underline; }
 
     .result-card {
-      background: rgba(255, 255, 255, 0.06);
+      background: var(--bg);
       border-radius: var(--radius-md);
       padding: 18px 20px;
-      border: 1px solid var(--glass-border);
     }
-    .result-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13.5px;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      gap: 12px;
-    }
+    .result-row { display: flex; justify-content: space-between; font-size: 13.5px; padding: 8px 0; border-bottom: 1px solid var(--line); gap: 12px; }
     .result-row:last-child { border-bottom: none; }
-    .result-row span:first-child { color: var(--aetos-gray); flex-shrink: 0; }
-    .result-row span:last-child { font-weight: 600; color: #FFFFFF; text-align: right; }
+    .result-row span:first-child { color: var(--ink-500); flex-shrink: 0; }
+    .result-row span:last-child { font-weight: 600; text-align: right; }
 
     .empty-state {
       display: none;
       text-align: center;
       padding: 30px 20px;
-      color: var(--aetos-gray);
+      color: var(--ink-500);
       font-size: 13px;
     }
-    .empty-state svg { margin-bottom: 12px; }
+    .empty-state svg { margin-bottom: 10px; }
+
+    .notice-box {
+      margin-top: 22px;
+      font-size: 12.5px;
+      color: var(--ink-700);
+      background: var(--amber-50);
+      border: 1px solid #FEC84B;
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      line-height: 1.6;
+    }
+    .notice-box strong { color: var(--ink-900); }
 
     footer {
-      padding: 28px 20px 18px;
+      padding: 22px;
       font-size: 12px;
-      color: rgba(255,255,255,0.4);
+      color: var(--ink-300);
       text-align: center;
-      border-top: 1px solid var(--glass-border);
-      margin-top: 20px;
-      background: transparent;
-      position: relative;
-      z-index: 2;
+      border-top: 1px solid var(--line);
+      background: var(--surface);
     }
 
-    @media (max-width: 700px) {
-      header {
-        margin: 16px 16px 12px;
-        padding: 14px 18px;
-        border-radius: var(--radius-md);
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .brand-group { justify-content: center; }
-      nav.tabs { width: 100%; justify-content: center; flex-wrap: wrap; }
-      .tab-btn { font-size: 12px; padding: 8px 14px; }
-      main { padding: 20px 16px 48px; }
-      .card { padding: 24px 18px 28px; }
+    @media (max-width: 640px) {
+      header { padding: 14px 18px; }
+      .brand-title { font-size: 13.5px; }
+      .brand-subtitle { display: none; }
+      nav.tabs { width: 100%; justify-content: center; }
+      main { padding: 30px 16px 48px; }
+      .card { padding: 22px 18px 26px; }
       .row2, .row-item-qty { grid-template-columns: 1fr; }
       .lookup-row { flex-direction: column; }
-      .modal-box { padding: 24px 18px; }
     }
   </style>
 </head>
@@ -645,7 +484,7 @@
   <div class="brand-group">
     <!-- Placeholder — swap for the real AETOS logo PNG once supplied -->
     <svg class="brand-logo" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AETOS logo placeholder">
-      <rect width="60" height="60" rx="14" fill="#1A365D"/>
+      <rect width="60" height="60" rx="14" fill="#0F1729"/>
       <text x="30" y="39" font-family="Inter, -apple-system, sans-serif" font-size="24" font-weight="800" fill="#ffffff" text-anchor="middle">A</text>
     </svg>
     <div class="brand-divider"></div>
@@ -693,7 +532,9 @@
 
       <form id="requestForm" novalidate>
 
-        <!-- Shared: identity (both Exchange and Purchase) -->
+        <!-- Shared: identity (both Exchange and Purchase). SAP ID + Service
+             Number together are the verified identity pair used later on
+             the Track page — Staff Name is for display/contact only. -->
         <fieldset id="identityFieldset">
           <legend>YOUR DETAILS</legend>
 
@@ -710,17 +551,24 @@
             </div>
           </div>
 
-          <div class="field" id="field-contactNumber">
-            <label for="contactNumber">Contact number<span class="req">*</span></label>
-            <input type="tel" id="contactNumber">
-            <div class="error-text">Enter a contact number.</div>
+          <div class="row2">
+            <div class="field" id="field-serviceNumber">
+              <label for="serviceNumber">Service number<span class="req">*</span></label>
+              <input type="text" id="serviceNumber">
+              <div class="error-text">Enter your service number.</div>
+            </div>
+            <div class="field" id="field-contactNumber">
+              <label for="contactNumber">Contact number<span class="req">*</span></label>
+              <input type="tel" id="contactNumber">
+              <div class="error-text">Enter a contact number.</div>
+            </div>
           </div>
         </fieldset>
 
         <!-- Shared: entity (used for item eligibility AND to tag your unique Emp ID) -->
         <fieldset id="entityFieldset">
           <legend>ENTITY</legend>
-          <div class="helper-note">Your entity determines which items you're eligible to request, and — together with your SAP ID and name — is used to verify your identity when you track your requests later.</div>
+          <div class="helper-note">Your entity determines which items you're eligible to request. Together with your SAP ID and service number, it's also used to verify your identity when you track your requests later.</div>
           <div class="field" id="field-entity">
             <label for="entity">Entity<span class="req">*</span></label>
             <select id="entity">
@@ -738,11 +586,6 @@
           <legend>ADDITIONAL DETAILS</legend>
 
           <div class="row2">
-            <div class="field" id="field-serviceNumber">
-              <label for="serviceNumber">Service number<span class="req">*</span></label>
-              <input type="text" id="serviceNumber">
-              <div class="error-text">Enter your service number.</div>
-            </div>
             <div class="field" id="field-ftpt">
               <label for="ftpt">FT / PT<span class="req">*</span></label>
               <select id="ftpt">
@@ -752,19 +595,17 @@
               </select>
               <div class="error-text">Select FT or PT.</div>
             </div>
-          </div>
-
-          <div class="row2">
             <div class="field" id="field-div">
               <label for="div">Division<span class="req">*</span></label>
               <input type="text" id="div">
               <div class="error-text">Enter your division.</div>
             </div>
-            <div class="field" id="field-worksite">
-              <label for="worksite">Current worksite<span class="req">*</span></label>
-              <input type="text" id="worksite">
-              <div class="error-text">Enter your current worksite.</div>
-            </div>
+          </div>
+
+          <div class="field" id="field-worksite">
+            <label for="worksite">Current worksite<span class="req">*</span></label>
+            <input type="text" id="worksite">
+            <div class="error-text">Enter your current worksite.</div>
           </div>
         </fieldset>
 
@@ -814,11 +655,11 @@
     <div class="card">
       <div class="success-icon">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 12.5L9.5 18L20 6" stroke="#34D399" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 12.5L9.5 18L20 6" stroke="#17B26A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
       <h1 style="font-size:19px; font-weight:800; margin:0 0 4px;">Request submitted</h1>
-      <p style="font-size:13.5px; color:rgba(255,255,255,0.6); margin:0;">Your request has been sent to the review queue.</p>
+      <p style="font-size:13.5px; color:var(--ink-500); margin:0;">Your request has been sent to the review queue.</p>
 
       <div class="req-chip">
         <span class="code" id="reqCodeDisplay">—</span>
@@ -835,25 +676,29 @@
   <div class="view" id="statusView">
     <div class="intro">
       <h1>Track your requests</h1>
-      <p>Enter your SAP ID and name to see all your submitted requests — Exchange and Purchase.</p>
+      <p>Enter your SAP ID and service number to see all your submitted requests — Exchange and Purchase.</p>
     </div>
 
     <div class="card">
       <div class="lookup-row">
         <input type="text" id="lookupInput" inputmode="numeric" maxlength="8" placeholder="SAP ID e.g. 25012345">
-        <input type="text" id="lookupNameInput" placeholder="Your name as submitted">
+        <input type="text" id="lookupServiceInput" placeholder="Service number as submitted">
         <button type="button" id="lookupBtn">Search</button>
       </div>
-      <p class="lookup-hint">For your privacy, your SAP ID and name must both match your submission exactly (name is not case-sensitive) before any requests are shown.</p>
+      <p class="lookup-hint">For your privacy, your SAP ID and service number must both match your submission exactly before any requests are shown.</p>
 
       <div class="lookup-result" id="lookupResult"></div>
 
       <div class="empty-state" id="notFound">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="11" cy="11" r="7" stroke="#94A3B8" stroke-width="1.6"/>
-          <path d="M20 20l-4-4" stroke="#94A3B8" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="11" cy="11" r="7" stroke="#98A2B3" stroke-width="1.6"/>
+          <path d="M20 20l-4-4" stroke="#98A2B3" stroke-width="1.6" stroke-linecap="round"/>
         </svg>
         <div id="notFoundText">No requests found for that SAP ID.<br>Double-check it matches exactly (8 digits, starting with 25).</div>
+      </div>
+
+      <div class="notice-box">
+        <strong>Please note:</strong> For approved Purchase requests, kindly arrange for a representative to attend the store and collect the item by the next working day. Requests not collected within this timeframe cannot be guaranteed, as stock availability and store conditions are subject to change at any time. Checking your request status here before making a trip also helps avoid an unnecessary visit to the store for an Exchange item that may no longer be in stock.
       </div>
     </div>
   </div>
@@ -879,7 +724,7 @@
 <footer>&copy; AETOS Holdings Pte. Ltd. &middot; Internal CSS Store Logistics Portal</footer>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKnx9svJ-6VifXkrfwV2fb4s4Tl-XkCiLk6MIaGtqWsZ3Q85IsreA4d4MCp_JGBwuP4g/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxNFZI5yuO0CEWMO2NS4WMrBy-ouFMKcHs9ZOwzSPJZ9So94Ebe5OJxT2IC50OOug4Zrw/exec";
 
   let requestType = 'Exchange';
   let photoData = null; // { base64, mimeType, fileName } once a photo is selected
@@ -1009,7 +854,6 @@
   }
 
   autoCapitalize(document.getElementById('staffName'));
-  autoCapitalize(document.getElementById('lookupNameInput'));
 
   function escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, c => ({
@@ -1078,13 +922,13 @@
       ['field-material', document.getElementById('materialSelect').value],
       ['field-qty', document.getElementById('qty').value && Number(document.getElementById('qty').value) >= 1],
       ['field-staffName', document.getElementById('staffName').value.trim()],
+      ['field-serviceNumber', document.getElementById('serviceNumber').value.trim()],
       ['field-contactNumber', document.getElementById('contactNumber').value.trim()],
       ['field-entity', document.getElementById('entity').value],
     ];
 
     if (requestType === 'Exchange') {
       checks = checks.concat([
-        ['field-serviceNumber', document.getElementById('serviceNumber').value.trim()],
         ['field-ftpt', document.getElementById('ftpt').value],
         ['field-div', document.getElementById('div').value.trim()],
         ['field-worksite', document.getElementById('worksite').value.trim()],
@@ -1109,13 +953,13 @@
       requestType: requestType,
       sapId: document.getElementById('sapId').value.trim(),
       staffName: document.getElementById('staffName').value.trim(),
+      serviceNumber: document.getElementById('serviceNumber').value.trim(),
       contactNumber: document.getElementById('contactNumber').value.trim(),
       entity: document.getElementById('entity').value,
     };
 
     if (requestType === 'Exchange') {
       return Object.assign(base, {
-        serviceNumber: document.getElementById('serviceNumber').value.trim(),
         ftpt: document.getElementById('ftpt').value,
         div: document.getElementById('div').value.trim(),
         worksite: document.getElementById('worksite').value.trim(),
@@ -1143,6 +987,7 @@
           ['Request type', 'Exchange'],
           ['Staff name', p.staffName],
           ['SAP ID', p.sapId],
+          ['Service number', p.serviceNumber],
           ['Entity', p.entity],
           ['Item', p.materialName],
           ['Quantity', p.qty],
@@ -1153,6 +998,7 @@
           ['Request type', 'Purchase'],
           ['Staff name', p.staffName],
           ['SAP ID', p.sapId],
+          ['Service number', p.serviceNumber],
           ['Entity', p.entity],
           ['Item', p.materialName],
           ['Quantity', p.qty],
@@ -1213,6 +1059,7 @@
     const rows = requestType === 'Exchange'
       ? [
           ['Staff name', payload.staffName],
+          ['Service number', payload.serviceNumber],
           ['Entity', payload.entity],
           ['Item', payload.materialName],
           ['Quantity', payload.qty],
@@ -1221,6 +1068,7 @@
         ]
       : [
           ['Staff name', payload.staffName],
+          ['Service number', payload.serviceNumber],
           ['Entity', payload.entity],
           ['Item', payload.materialName],
           ['Quantity', payload.qty],
@@ -1247,10 +1095,10 @@
     showView('requestView');
   });
 
-  // ---- Track by SAP ID + name ----
+  // ---- Track by SAP ID + service number ----
   const lookupBtn = document.getElementById('lookupBtn');
   const lookupInput = document.getElementById('lookupInput');
-  const lookupNameInput = document.getElementById('lookupNameInput');
+  const lookupServiceInput = document.getElementById('lookupServiceInput');
   const lookupResult = document.getElementById('lookupResult');
   const notFound = document.getElementById('notFound');
   const notFoundText = document.getElementById('notFoundText');
@@ -1260,7 +1108,11 @@
       const statusClass = r.status === 'Out of Stock' ? 'OutOfStock' : r.status;
       const rows = [['Item', r.materialName], ['Quantity', r.qty]];
       if (r.requestType === 'Purchase' && r.entity) rows.push(['Entity', r.entity]);
-      if (r.requestType === 'Exchange' && r.reason) rows.push(['Reason', r.reason]);
+      // Reason for exchange is only surfaced while it's actionable —
+      // i.e. the request is still Pending, or was Rejected.
+      if (r.requestType === 'Exchange' && r.reason && (r.status === 'Pending' || r.status === 'Rejected')) {
+        rows.push(['Reason', r.reason]);
+      }
 
       const photoRow = r.photoLink
         ? `<div class="record-row"><span>Photo</span><span><a href="${r.photoLink}" target="_blank" rel="noopener">View photo</a></span></div>`
@@ -1284,12 +1136,12 @@
 
   async function checkStatus() {
     const sapValue = lookupInput.value.trim();
-    const nameValue = lookupNameInput.value.trim();
+    const serviceValue = lookupServiceInput.value.trim();
     lookupResult.innerHTML = '';
     notFound.style.display = 'none';
 
-    if (!sapValue || !nameValue) {
-      notFoundText.textContent = 'Enter both your SAP ID and your name to view your requests.';
+    if (!sapValue || !serviceValue) {
+      notFoundText.textContent = 'Enter both your SAP ID and your service number to view your requests.';
       notFound.style.display = 'block';
       return;
     }
@@ -1298,11 +1150,11 @@
     lookupBtn.textContent = 'Searching…';
 
     try {
-      const res = await fetch(`${APPS_SCRIPT_URL}?action=getBySapId&sapId=${encodeURIComponent(sapValue)}&staffName=${encodeURIComponent(nameValue)}`);
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=getBySapId&sapId=${encodeURIComponent(sapValue)}&serviceNumber=${encodeURIComponent(serviceValue)}`);
       const data = await res.json();
 
       if (!data.found || !data.requests || data.requests.length === 0) {
-        notFoundText.textContent = data.message || 'No requests found for that SAP ID and name.';
+        notFoundText.textContent = data.message || 'No requests found for that SAP ID and service number.';
         notFound.style.display = 'block';
         return;
       }
@@ -1321,7 +1173,7 @@
 
   lookupBtn.addEventListener('click', checkStatus);
   lookupInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkStatus(); });
-  lookupNameInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkStatus(); });
+  lookupServiceInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkStatus(); });
 </script>
 
 </body>
