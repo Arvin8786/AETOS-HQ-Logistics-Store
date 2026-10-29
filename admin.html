@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0A1A3A">
+  <title>Store Team Dashboard — AETOS CSS</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin">
+
+<header>
+  <div class="brand-group">
+    <svg class="brand-logo" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AETOS logo placeholder">
+      <defs>
+        <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#22BDF5"/>
+          <stop offset="1" stop-color="#1B4DB1"/>
+        </linearGradient>
+      </defs>
+      <rect width="60" height="60" rx="14" fill="url(#logoGrad)"/>
+      <text x="30" y="40" font-family="Inter, -apple-system, sans-serif" font-size="26" font-weight="800" fill="#ffffff" text-anchor="middle">A</text>
+    </svg>
+    <div class="brand-divider"></div>
+    <div>
+      <div class="brand-title">Store Team Dashboard</div>
+      <div class="brand-subtitle" id="whoami">Logistics Central Store</div>
+    </div>
+  </div>
+
+  <nav class="tabs" id="adminTabs" hidden aria-label="Dashboard sections">
+    <button class="tab-btn active" data-tab="queueTab" type="button">Queue</button>
+    <button class="tab-btn" data-tab="searchTab" type="button">Search</button>
+    <button class="tab-btn" data-tab="reportTab" type="button">Reports</button>
+    <button class="tab-btn" id="signOutBtn" type="button">Sign out</button>
+  </nav>
+</header>
+
+<div class="hero short" aria-hidden="true"></div>
+
+<main class="wide">
+
+  <!-- LOGIN -->
+  <div class="view active" id="loginView">
+    <div class="intro"><h1>Store team sign-in</h1><p>Authorised store staff only. Every action you take is recorded under your name.</p></div>
+    <div class="card login-card">
+      <div class="alert" id="loginAlert" role="alert"></div>
+      <div class="field">
+        <label for="adminName">Your name<span class="req">*</span></label>
+        <input type="text" id="adminName" autocomplete="name" placeholder="e.g. Ahmad">
+      </div>
+      <div class="field">
+        <label for="adminPin">Store PIN<span class="req">*</span></label>
+        <input type="password" id="adminPin" autocomplete="current-password">
+      </div>
+      <button class="submit" id="loginBtn" type="button"><span class="spinner" id="loginSpinner"></span><span id="loginText">Sign in</span></button>
+    </div>
+  </div>
+
+  <!-- QUEUE -->
+  <div class="view" id="queueTab">
+    <div class="intro"><h1>Request queue</h1><p>Select items, then choose what happens to them. Staff are emailed automatically when an item is ready or rejected.</p></div>
+
+    <div class="stat-grid" id="stats"></div>
+
+    <div class="toolbar">
+      <div class="chip-group" id="statusChips">
+        <button class="chip active" data-status="all" type="button">All open</button>
+        <button class="chip" data-status="Pending" type="button">Pending</button>
+        <button class="chip" data-status="Out of Stock" type="button">Out of stock</button>
+        <button class="chip" data-status="Ready for Collection" type="button">Ready</button>
+      </div>
+      <select id="entityFilter" aria-label="Filter by entity">
+        <option value="">All entities</option>
+        <option>AETOS Holdings</option>
+        <option>AETOS Security Management</option>
+        <option>AETOS Guards Services</option>
+      </select>
+      <input type="text" id="queueSearch" placeholder="Search name, SAP ID, item…" aria-label="Search the queue">
+      <button class="btn-ghost small" id="refreshBtn" type="button">Refresh</button>
+    </div>
+
+    <div id="queueList" class="q-list"></div>
+    <div class="empty-state" id="queueEmpty">Nothing here — the queue is clear.</div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="view" id="searchTab">
+    <div class="intro"><h1>Find a request</h1><p>Search open and closed requests by request number, SAP ID, name, service number or item.</p></div>
+    <div class="card">
+      <div class="lookup-row two">
+        <input type="text" id="searchInput" placeholder="e.g. CSS-20261029-0004, 25012345, Ahmad" aria-label="Search requests">
+        <button type="button" id="searchBtn" class="lookup-btn">Search</button>
+      </div>
+      <div class="alert" id="searchAlert" role="alert"></div>
+      <div id="searchResults" class="q-list tight"></div>
+    </div>
+  </div>
+
+  <!-- REPORT -->
+  <div class="view" id="reportTab">
+    <div class="intro"><h1>Monthly report</h1><p>Volumes, turnaround and what to reorder — ready to share with management.</p></div>
+    <div class="card">
+      <div class="lookup-row two">
+        <input type="month" id="reportMonth" aria-label="Month">
+        <button type="button" id="reportBtn" class="lookup-btn">Load report</button>
+      </div>
+      <div class="alert" id="reportAlert" role="alert"></div>
+      <div id="reportBody"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Selection action bar -->
+<div class="actionbar" id="actionBar" hidden>
+  <div class="ab-count"><strong id="selCount">0</strong> selected</div>
+  <div class="ab-btns">
+    <button class="btn-act ready" data-status="Ready for Collection" type="button">Ready for collection</button>
+    <button class="btn-act oos" data-status="Out of Stock" type="button">Out of stock</button>
+    <button class="btn-act reject" data-status="Rejected" type="button">Reject…</button>
+    <button class="btn-act collected" data-status="Collected" type="button">Collected</button>
+    <button class="btn-act grey" data-status="Uncollected" type="button">Uncollected</button>
+    <button class="btn-act grey" data-status="Pending" type="button">Back to pending</button>
+    <button class="btn-act clear" id="clearSel" type="button">Clear</button>
+  </div>
+</div>
+
+<!-- Action modal -->
+<div class="modal-backdrop" id="actionModal">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="amTitle">
+    <div class="modal-title" id="amTitle">Confirm</div>
+    <div class="modal-sub" id="amSub"></div>
+    <div class="field">
+      <label for="amRemarks" id="amLabel">Note</label>
+      <textarea id="amRemarks" rows="3" maxlength="300"></textarea>
+      <div class="error-text" id="amError">A reason is required.</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="amCancel" type="button">Cancel</button>
+      <button class="submit" id="amConfirm" type="button"><span class="spinner" id="amSpinner"></span><span id="amText">Confirm</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<footer>&copy; AETOS Holdings Pte. Ltd. &middot; Internal CSS Store Logistics Portal — staff use only</footer>
+
+<script>
+  const API = "https://script.google.com/macros/s/AKfycbxNFZI5yuO0CEWMO2NS4WMrBy-ouFMKcHs9ZOwzSPJZ9So94Ebe5OJxT2IC50OOug4Zrw/exec";
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const safeUrl = (u) => /^https?:\/\//i.test(String(u || '').trim()) ? String(u).trim() : '';
+  const STATUS_CLASS = { 'Out of Stock': 'OutOfStock', 'Ready for Collection': 'Ready' };
+  const sClass = (s) => STATUS_CLASS[s] || String(s).replace(/[^A-Za-z]/g, '');
+
+  let session = null;
+  try { session = JSON.parse(sessionStorage.getItem('cssAdmin') || 'null'); } catch (e) { session = null; }
+
+  const state = { queue: [], filter: { status: 'all', entity: '', q: '' }, selected: new Set(), pendingStatus: null, timer: null };
+
+  /* ------------------------------------------------------------------ helpers */
+  function toast(msg, isError) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.className = 'toast show' + (isError ? ' error' : '');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => t.classList.remove('show'), 4500);
+  }
+
+  function showAlert(id, msg) { const a = $(id); a.textContent = msg; a.classList.toggle('error', !!msg); }
+
+  async function api(action, payload) {
+    const res = await fetch(API, {
+      method: 'POST', // no Content-Type header: avoids a CORS preflight Apps Script can't answer
+      body: JSON.stringify(Object.assign({ action, token: session && session.token }, payload || {})),
+    });
+    const data = await res.json();
+    if (data.status !== 'ok') {
+      if (data.message === 'SESSION_EXPIRED') { signOut(); throw new Error('Your session expired. Please sign in again.'); }
+      throw new Error(data.message || 'Something went wrong.');
+    }
+    return data;
+  }
+
+  function showTab(id) {
+    document.querySelectorAll('main .view').forEach(v => v.classList.remove('active'));
+    $(id).classList.add('active');
+    document.querySelectorAll('#adminTabs .tab-btn[data-tab]').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+    $('actionBar').hidden = !(id === 'queueTab' && state.selected.size);
+    if (id === 'queueTab') loadQueue(true);
+  }
+
+  /* -------------------------------------------------------------------- login */
+  function enterApp() {
+    $('adminTabs').hidden = false;
+    $('whoami').textContent = 'Signed in as ' + session.name;
+    showTab('queueTab');
+    clearInterval(state.timer);
+    state.timer = setInterval(() => {
+      if ($('queueTab').classList.contains('active') && !document.querySelector('.modal-backdrop.active') && !state.selected.size) loadQueue(true);
+    }, 60000);
+  }
+
+  function signOut() {
+    if (session) { fetch(API, { method: 'POST', body: JSON.stringify({ action: 'adminLogout', token: session.token }) }).catch(() => {}); }
+    session = null;
+    sessionStorage.removeItem('cssAdmin');
+    clearInterval(state.timer);
+    state.selected.clear();
+    $('adminTabs').hidden = true;
+    $('actionBar').hidden = true;
+    $('whoami').textContent = 'Logistics Central Store';
+    document.querySelectorAll('main .view').forEach(v => v.classList.remove('active'));
+    $('loginView').classList.add('active');
+    $('adminPin').value = '';
+  }
+
+  async function login() {
+    const btn = $('loginBtn');
+    showAlert('loginAlert', '');
+    btn.disabled = true; $('loginSpinner').style.display = 'inline-block'; $('loginText').textContent = 'Signing in…';
+    try {
+      const data = await api('adminLogin', { name: $('adminName').value.trim(), pin: $('adminPin').value });
+      session = { token: data.token, name: data.name };
+      sessionStorage.setItem('cssAdmin', JSON.stringify(session));
+      enterApp();
+    } catch (err) {
+      showAlert('loginAlert', err.message);
+    } finally {
+      btn.disabled = false; $('loginSpinner').style.display = 'none'; $('loginText').textContent = 'Sign in';
+    }
+  }
+
+  $('loginBtn').addEventListener('click', login);
+  $('adminPin').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+  $('signOutBtn').addEventListener('click', signOut);
+  $('adminTabs').addEventListener('click', (e) => {
+    const b = e.target.closest('.tab-btn[data-tab]');
+    if (b) showTab(b.dataset.tab);
+  });
+
+  /* -------------------------------------------------------------------- queue */
+  const keyOf = (q) => q.requestId + '#' + q.line;
+
+  async function loadQueue(quiet) {
+    if (!session) return;
+    try {
+      if (!quiet) $('refreshBtn').textContent = 'Refreshing…';
+      const data = await api('adminData');
+      state.queue = data.queue;
+      // drop selections that no longer exist
+      const alive = new Set(data.queue.map(keyOf));
+      state.selected.forEach(k => { if (!alive.has(k)) state.selected.delete(k); });
+      renderStats(data.stats, data.autoDeduct);
+      renderQueue();
+    } catch (err) {
+      if (!quiet) toast(err.message, true);
+    } finally {
+      $('refreshBtn').textContent = 'Refresh';
+    }
+  }
+
+  function renderStats(st, autoDeduct) {
+    const tile = (n, label, cls) => `<div class="stat ${cls || ''}"><div class="stat-num">${esc(n)}</div><div class="stat-label">${esc(label)}</div></div>`;
+    $('stats').innerHTML =
+      tile(st.pending, 'Pending', st.pending ? 'warn' : '') +
+      tile(st.outOfStock, 'Out of stock', st.outOfStock ? 'info' : '') +
+      tile(st.ready, 'Ready, awaiting collection', '') +
+      tile(st.overdueCollect, 'Overdue for collection', st.overdueCollect ? 'bad' : '') +
+      tile(st.pending ? st.oldestPendingHours + ' h' : '—', 'Oldest pending', st.oldestPendingHours > 24 ? 'bad' : '');
+  }
+
+  function matchesFilter(q) {
+    const f = state.filter;
+    if (f.status !== 'all' && q.status !== f.status) return false;
+    if (f.entity && q.entity !== f.entity) return false;
+    if (f.q) {
+      const hay = (q.requestId + ' ' + q.staffName + ' ' + q.sapId + ' ' + q.item).toLowerCase();
+      if (hay.indexOf(f.q) === -1) return false;
+    }
+    return true;
+  }
+
+  function stockTag(q) {
+    if (q.status === 'Ready for Collection') return '<span class="stock-tag reserved">Reserved</span>';
+    if (q.balance === null || q.balance === undefined) return '';
+    if (q.qty > q.balance) return `<span class="stock-tag short">Stock ${esc(q.balance)} — short by ${esc(q.qty - q.balance)}</span>`;
+    return `<span class="stock-tag ok">Stock ${esc(q.balance)}</span>`;
+  }
+
+  function ageText(iso) {
+    if (!iso) return '';
+    const h = (Date.now() - new Date(iso).getTime()) / 3600000;
+    if (h < 1) return 'just now';
+    if (h < 48) return Math.round(h) + ' h ago';
+    return Math.round(h / 24) + ' days ago';
+  }
+
+  function lineHtml(q, selectable) {
+    return `
+      <div class="q-line ${state.selected.has(keyOf(q)) ? 'sel' : ''}">
+        ${selectable ? `<input type="checkbox" class="line-check" data-key="${esc(keyOf(q))}" ${state.selected.has(keyOf(q)) ? 'checked' : ''} aria-label="Select line">` : ''}
+        <div class="ql-main">
+          <span class="line-item">${esc(q.item)}${q.size ? ' <span class="size-chip">' + esc(q.size) + '</span>' : ''}</span>
+          <span class="line-qty-t">× ${esc(q.qty)}</span>
+          ${selectable ? stockTag(q) : ''}
+          ${q.wasOOS && selectable ? '<span class="stock-tag short">Was out of stock</span>' : ''}
+        </div>
+        <span class="status-pill ${sClass(q.status)}">${esc(q.status)}</span>
+        ${q.remarks ? `<div class="ql-note">${esc(q.remarks)}</div>` : ''}
+      </div>`;
+  }
+
+  function groupLines(list) {
+    const groups = [], idx = {};
+    list.forEach(q => {
+      if (!(q.requestId in idx)) { idx[q.requestId] = groups.length; groups.push({ id: q.requestId, lines: [] }); }
+      groups[idx[q.requestId]].lines.push(q);
+    });
+    return groups;
+  }
+
+  function cardHtml(g, selectable) {
+    const f = g.lines[0];
+    const photo = safeUrl(g.lines.map(l => l.photoLink).find(Boolean));
+    const allSel = selectable && g.lines.every(l => state.selected.has(keyOf(l)));
+    return `
+      <div class="q-card">
+        <div class="q-head">
+          <div class="q-id">
+            ${selectable ? `<input type="checkbox" class="grp-check" data-req="${esc(g.id)}" ${allSel ? 'checked' : ''} aria-label="Select all lines of ${esc(g.id)}">` : ''}
+            <span class="record-code">${esc(g.id)}</span>
+            <span class="record-type">${esc(f.type)}</span>
+            <span class="q-age">${esc(f.submittedOn)}${selectable ? ' · ' + esc(ageText(f.submittedAt)) : ''}</span>
+          </div>
+          <div class="q-who"><strong>${esc(f.staffName)}</strong> · SAP ${esc(f.sapId)} · ${esc(f.entity)}</div>
+          <div class="q-contact">
+            <a href="tel:${esc(f.contact)}">${esc(f.contact)}</a>
+            ${f.email ? ' · <a href="mailto:' + esc(f.email) + '">' + esc(f.email) + '</a>' : ' · <span class="muted">no email</span>'}
+            ${f.type === 'Exchange' ? ' · ' + esc(f.ftpt) + ' · ' + esc(f.div) + ' · ' + esc(f.worksite) : ''}
+          </div>
+        </div>
+        <div class="q-lines">${g.lines.map(l => lineHtml(l, selectable)).join('')}</div>
+        ${(f.reason || photo) ? `<div class="q-foot">
+          ${f.reason ? `<span><strong>Reason:</strong> ${esc(f.reason)}</span>` : ''}
+          ${photo ? `<a href="${esc(photo)}" target="_blank" rel="noopener noreferrer">View photo ↗</a>` : ''}
+        </div>` : ''}
+      </div>`;
+  }
+
+  function renderQueue() {
+    const visible = state.queue.filter(matchesFilter);
+    $('queueList').innerHTML = groupLines(visible).map(g => cardHtml(g, true)).join('');
+    $('queueEmpty').style.display = visible.length ? 'none' : 'block';
+    updateActionBar();
+  }
+
+  function updateActionBar() {
+    const n = state.selected.size;
+    $('selCount').textContent = n;
+    $('actionBar').hidden = !(n && $('queueTab').classList.contains('active'));
+  }
+
+  $('queueList').addEventListener('change', (e) => {
+    if (e.target.classList.contains('line-check')) {
+      const k = e.target.dataset.key;
+      e.target.checked ? state.selected.add(k) : state.selected.delete(k);
+      renderQueue();
+    } else if (e.target.classList.contains('grp-check')) {
+      state.queue.filter(q => q.requestId === e.target.dataset.req && matchesFilter(q)).forEach(q => {
+        e.target.checked ? state.selected.add(keyOf(q)) : state.selected.delete(keyOf(q));
+      });
+      renderQueue();
+    }
+  });
+
+  $('statusChips').addEventListener('click', (e) => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    document.querySelectorAll('#statusChips .chip').forEach(c => c.classList.toggle('active', c === b));
+    state.filter.status = b.dataset.status; renderQueue();
+  });
+  $('entityFilter').addEventListener('change', () => { state.filter.entity = $('entityFilter').value; renderQueue(); });
+  $('queueSearch').addEventListener('input', () => { state.filter.q = $('queueSearch').value.trim().toLowerCase(); renderQueue(); });
+  $('refreshBtn').addEventListener('click', () => loadQueue(false));
+  $('clearSel').addEventListener('click', () => { state.selected.clear(); renderQueue(); });
+
+  /* ------------------------------------------------------------ status actions */
+  const ACTION_TEXT = {
+    'Ready for Collection': { title: 'Mark ready for collection', label: 'Note for the staff member (optional)', ph: 'e.g. Collect at the Level 2 counter', sub: 'Stock is deducted and the staff member is emailed with a collect-by date.' },
+    'Out of Stock': { title: 'Mark out of stock', label: 'Note (optional)', ph: 'e.g. Expected restock next week', sub: 'The request stays open. The staff member is emailed.' },
+    'Rejected': { title: 'Reject', label: 'Reason (required — shown to the staff member)', ph: 'e.g. Not eligible: item exchanged 3 months ago', sub: 'Any reserved stock is returned. The request moves to History.', required: true },
+    'Collected': { title: 'Mark collected', label: 'Note (optional)', ph: '', sub: 'The request moves to History.' },
+    'Uncollected': { title: 'Mark uncollected', label: 'Note (optional)', ph: 'e.g. Staff did not collect', sub: 'Reserved stock is returned and the request moves to History.' },
+    'Pending': { title: 'Move back to pending', label: 'Note (optional)', ph: '', sub: 'Any reserved stock is returned.' },
+  };
+
+  $('actionBar').addEventListener('click', (e) => {
+    const b = e.target.closest('.btn-act[data-status]'); if (!b) return;
+    openActionModal(b.dataset.status);
+  });
+
+  function openActionModal(status) {
+    const t = ACTION_TEXT[status];
+    state.pendingStatus = status;
+    $('amTitle').textContent = t.title + ' — ' + state.selected.size + ' item' + (state.selected.size > 1 ? 's' : '');
+    $('amSub').textContent = t.sub;
+    $('amLabel').textContent = t.label;
+    $('amRemarks').placeholder = t.ph;
+    $('amRemarks').value = '';
+    $('amError').style.display = 'none';
+    $('amConfirm').className = 'submit' + (status === 'Rejected' ? ' danger' : '');
+    $('actionModal').classList.add('active');
+    setTimeout(() => $('amRemarks').focus(), 50);
+  }
+
+  $('amCancel').addEventListener('click', () => $('actionModal').classList.remove('active'));
+
+  $('amConfirm').addEventListener('click', async () => {
+    const status = state.pendingStatus;
+    const remarks = $('amRemarks').value.trim();
+    if (ACTION_TEXT[status].required && !remarks) { $('amError').style.display = 'block'; return; }
+
+    const items = Array.from(state.selected).map(k => { const i = k.lastIndexOf('#'); return { requestId: k.slice(0, i), line: Number(k.slice(i + 1)) }; });
+    const btn = $('amConfirm');
+    btn.disabled = true; $('amSpinner').style.display = 'inline-block'; $('amText').textContent = 'Working…';
+    try {
+      const res = await api('adminAction', { items, newStatus: status, remarks });
+      $('actionModal').classList.remove('active');
+      state.selected.clear();
+      if (res.failed && res.failed.length) {
+        toast(`${res.done} updated, ${res.failed.length} failed: ${res.failed[0].message}`, true);
+      } else {
+        toast(`${res.done} item${res.done > 1 ? 's' : ''} updated.`);
+      }
+      await loadQueue(true);
+    } catch (err) {
+      $('actionModal').classList.remove('active');
+      toast(err.message, true);
+      loadQueue(true);
+    } finally {
+      btn.disabled = false; $('amSpinner').style.display = 'none'; $('amText').textContent = 'Confirm';
+    }
+  });
+
+  /* ------------------------------------------------------------------- search */
+  async function runSearch() {
+    showAlert('searchAlert', '');
+    $('searchResults').innerHTML = '';
+    const q = $('searchInput').value.trim();
+    $('searchBtn').disabled = true; $('searchBtn').textContent = 'Searching…';
+    try {
+      const data = await api('adminSearch', { query: q });
+      if (!data.results.length) { showAlert('searchAlert', 'No matching requests.'); return; }
+      $('searchResults').innerHTML = groupLines(data.results).map(g => cardHtml(g, false)).join('') +
+        (data.truncated ? '<p class="muted">Showing the first 80 lines — refine your search.</p>' : '');
+    } catch (err) {
+      showAlert('searchAlert', err.message);
+    } finally {
+      $('searchBtn').disabled = false; $('searchBtn').textContent = 'Search';
+    }
+  }
+  $('searchBtn').addEventListener('click', runSearch);
+  $('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(); });
+
+  /* ------------------------------------------------------------------- report */
+  (function initMonth() {
+    const d = new Date(); d.setMonth(d.getMonth() - 1);
+    $('reportMonth').value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+  })();
+
+  let lastReport = null;
+
+  function barList(obj, total) {
+    const keys = Object.keys(obj).sort((a, b) => obj[b] - obj[a]);
+    if (!keys.length) return '<p class="muted">No data.</p>';
+    return keys.map(k => `
+      <div class="bar-row"><span class="bar-label">${esc(k)}</span>
+        <span class="bar-track"><span class="bar-fill" style="width:${total ? Math.max(3, Math.round(obj[k] / total * 100)) : 0}%"></span></span>
+        <span class="bar-val">${esc(obj[k])}</span></div>`).join('');
+  }
+
+  function itemTable(list) {
+    if (!list.length) return '<p class="muted">No data.</p>';
+    return `<table class="rep-table"><thead><tr><th>Item</th><th>Qty</th><th>Lines</th></tr></thead><tbody>` +
+      list.map(x => `<tr><td>${esc(x.item)}</td><td>${esc(x.qty)}</td><td>${esc(x.lines)}</td></tr>`).join('') + '</tbody></table>';
+  }
+
+  async function loadReport() {
+    showAlert('reportAlert', '');
+    $('reportBody').innerHTML = '';
+    $('reportBtn').disabled = true; $('reportBtn').textContent = 'Loading…';
+    try {
+      const r = await api('adminReport', { month: $('reportMonth').value });
+      lastReport = r;
+      const tile = (n, l, c) => `<div class="stat ${c || ''}"><div class="stat-num">${esc(n)}</div><div class="stat-label">${esc(l)}</div></div>`;
+      $('reportBody').innerHTML = `
+        <h2 class="rep-title">${esc(r.label)}</h2>
+        <div class="stat-grid">
+          ${tile(r.requests, 'Requests')}${tile(r.lines, 'Item lines')}
+          ${tile(r.avgDecisionHours + ' h', 'Avg time to decision')}${tile(r.medianDecisionHours + ' h', 'Median time')}
+          ${tile(r.collected, 'Collected')}${tile(r.rejected, 'Rejected', r.rejected ? 'warn' : '')}
+          ${tile(r.uncollectedRate + '%', 'Uncollected rate', r.uncollectedRate > 10 ? 'bad' : '')}
+        </div>
+        <div class="rep-grid">
+          <div><h3>By type</h3>${barList(r.byType, r.lines)}</div>
+          <div><h3>By entity</h3>${barList(r.byEntity, r.lines)}</div>
+          <div><h3>Outcomes</h3>${barList(r.byStatus, r.lines)}</div>
+        </div>
+        <div class="rep-grid two">
+          <div><h3>Top requested items</h3>${itemTable(r.topItems)}</div>
+          <div><h3>Out-of-stock demand <span class="muted">(consider reordering)</span></h3>${itemTable(r.oosDemand)}</div>
+        </div>
+        <div class="rep-actions"><button class="btn-ghost small" id="csvBtn" type="button">Download CSV</button><button class="btn-ghost small" onclick="window.print()" type="button">Print</button></div>`;
+      $('csvBtn').addEventListener('click', downloadCsv);
+    } catch (err) {
+      showAlert('reportAlert', err.message);
+    } finally {
+      $('reportBtn').disabled = false; $('reportBtn').textContent = 'Load report';
+    }
+  }
+
+  function downloadCsv() {
+    const r = lastReport; if (!r) return;
+    const rows = [['AETOS CSS Store report', r.label], [], ['Requests', r.requests], ['Item lines', r.lines],
+      ['Avg hours to decision', r.avgDecisionHours], ['Uncollected %', r.uncollectedRate], [], ['Top items'], ['Item', 'Qty', 'Lines']]
+      .concat(r.topItems.map(x => [x.item, x.qty, x.lines]))
+      .concat([[], ['Out-of-stock demand'], ['Item', 'Qty', 'Lines']], r.oosDemand.map(x => [x.item, x.qty, x.lines]));
+    const csv = rows.map(row => row.map(c => {
+      let v = String(c == null ? '' : c);
+      if (/^[=+\-@]/.test(v)) v = "'" + v; // keep spreadsheet apps from running text as a formula
+      return '"' + v.replace(/"/g, '""') + '"';
+    }).join(',')).join('\r\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = 'css-store-report-' + r.month + '.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+  $('reportBtn').addEventListener('click', loadReport);
+
+  /* --------------------------------------------------------------------- init */
+  if (session && session.token) enterApp();
+</script>
+
+</body>
+</html>
