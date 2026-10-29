@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0A1A3A">
   <title>Logistics Central Store Portal — AETOS</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -72,8 +73,6 @@
 
       <form id="requestForm" novalidate>
 
-        <!-- Shared: identity. SAP ID + Service Number are the verified pair
-             used on the Track page. Staff name is for display/contact only. -->
         <fieldset id="identityFieldset">
           <div class="section-title">Your details</div>
 
@@ -102,9 +101,14 @@
               <div class="error-text">Enter a contact number.</div>
             </div>
           </div>
+
+          <div class="field" id="field-email">
+            <label for="email">Email <span class="opt">(optional — get notified when your item is ready)</span></label>
+            <input type="email" id="email" autocomplete="email" placeholder="name@company.com">
+            <div class="error-text">That email address does not look right.</div>
+          </div>
         </fieldset>
 
-        <!-- Shared: entity -->
         <fieldset id="entityFieldset">
           <div class="section-title">Entity</div>
           <div class="helper-note">Your entity determines which items you're eligible to request. Together with your SAP ID and service number, it's also used to verify your identity when you track your requests later.</div>
@@ -120,7 +124,7 @@
           </div>
         </fieldset>
 
-        <!-- Exchange-only: additional details -->
+        <!-- Exchange-only -->
         <fieldset id="exchangeExtraFieldset">
           <div class="section-title">Additional details</div>
 
@@ -148,40 +152,48 @@
           </div>
         </fieldset>
 
-        <!-- Exchange-only: reason + photo -->
         <fieldset id="exchangePhotoFieldset">
           <div class="section-title">Item condition</div>
 
-          <div class="field" id="field-reasonForExchange">
-            <label for="reasonForExchange">Reason for exchange<span class="req">*</span></label>
-            <input type="text" id="reasonForExchange" placeholder="e.g. Torn, wrong size, worn out">
-            <div class="error-text">Tell us why you're exchanging this item.</div>
+          <div class="field" id="field-reasonCategory">
+            <label for="reasonCategory">Reason for exchange<span class="req">*</span></label>
+            <select id="reasonCategory">
+              <option value="">Select a reason</option>
+            </select>
+            <div class="error-text">Choose a reason.</div>
+            <div class="hint" id="reasonHint"></div>
+          </div>
+
+          <div class="field" id="field-reasonDetails">
+            <label for="reasonDetails">Details <span class="opt" id="detailsOpt">(optional)</span></label>
+            <input type="text" id="reasonDetails" placeholder="e.g. Seam torn at the left sleeve" maxlength="200">
+            <div class="error-text">Please describe the reason.</div>
           </div>
 
           <div class="field" id="field-itemPhoto">
-            <label for="itemPhoto">Photo of item<span class="req">*</span></label>
+            <label for="itemPhoto">Photo of item(s)<span class="req">*</span></label>
             <input type="file" id="itemPhoto" accept="image/*">
             <div class="error-text">Attach a photo of the item you're exchanging.</div>
           </div>
         </fieldset>
 
-        <!-- Shared: item -->
+        <!-- Shared: item cart -->
         <fieldset>
           <div class="section-title" id="itemLegend">What are you requesting</div>
-          <div class="row-item-qty">
-            <div class="field" id="field-material">
-              <label for="materialSelect">Material name<span class="req">*</span></label>
-              <select id="materialSelect" disabled>
-                <option value="">Loading items…</option>
-              </select>
-              <div class="error-text">Select a material.</div>
-            </div>
-            <div class="field" id="field-qty">
-              <label for="qty">Quantity<span class="req">*</span></label>
-              <input type="number" id="qty" value="1" min="1" max="100">
-              <div class="error-text">Enter 1 to 100.</div>
-            </div>
-          </div>
+          <div id="itemsContainer"></div>
+          <button type="button" class="add-item" id="addItemBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+            Add another item
+          </button>
+          <div class="hint" id="itemsHint"></div>
+        </fieldset>
+
+        <fieldset>
+          <label class="consent" id="field-consent">
+            <input type="checkbox" id="consent">
+            <span>I agree that AETOS may use my name, contact details and item photo to process this request, and keep them only as long as needed for store records and audit.</span>
+          </label>
+          <div class="consent-error" id="consentError">Please tick the box to continue.</div>
         </fieldset>
 
         <button type="button" class="submit" id="reviewBtn">Review &amp; submit</button>
@@ -198,16 +210,21 @@
         </svg>
       </div>
       <h2 class="success-title">Request submitted</h2>
-      <p class="success-sub">Your request has been sent to the review queue. Keep your request number for reference.</p>
+      <p class="success-sub">Your request has been sent to the store team. Keep your request number for reference.</p>
 
       <div class="req-chip">
         <span class="code" id="reqCodeDisplay">—</span>
         <button type="button" id="copyBtn">Copy</button>
       </div>
 
+      <div class="oos-banner" id="oosBanner">Some items are currently out of stock. Your request stays open and the store will process it once stock arrives.</div>
+
       <div class="result-card" id="successSummary"></div>
 
-      <button class="again-btn" id="againBtn" type="button">Submit another request</button>
+      <div class="success-actions">
+        <button class="again-btn" id="againBtn" type="button">Submit another request</button>
+        <button class="again-btn ghost" id="trackBtn" type="button">Track my requests</button>
+      </div>
     </div>
   </div>
 
@@ -238,7 +255,7 @@
 
       <div class="notice-box">
         <h3>Important notice on approved Purchase &amp; Exchange requests</h3>
-        <p>Please ensure all approved requests are collected by the next working day. Uncollected stock cannot be held or guaranteed as inventory changes continuously.</p>
+        <p>Please ensure all approved requests are collected by the next working day. Uncollected stock cannot be held or guaranteed as inventory changes continuously, and items not collected in time are released back to stock.</p>
 
         <h4>Collection guidelines</h4>
         <ul>
@@ -263,7 +280,7 @@
 <div class="modal-backdrop" id="confirmModal">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-title" id="modalTitle">Confirm submission</div>
-    <div class="modal-sub">Double-check before this goes to the review queue.</div>
+    <div class="modal-sub">Double-check before this goes to the store team.</div>
     <div class="modal-summary" id="modalSummary"></div>
     <div class="modal-actions">
       <button class="btn-ghost" id="editBtn" type="button">Edit</button>
@@ -278,33 +295,30 @@
 <footer>&copy; AETOS Holdings Pte. Ltd. &middot; Internal CSS Store Logistics Portal</footer>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSrpM80T5cm4Sf8383wiWXq2F7RIXViMl2S_qfcL0WzsfrPnDmN5BRSpHyraqFEPB6/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx98zNKNsZpGbFG6VXywlyldY5eSDOzklUe56iAxd5LET2ovs88Y9l7tIU0MKBrSI0MCw/exec";
 
   let requestType = 'Exchange';
-  let photoData = null; // { base64, mimeType, fileName } once a photo is selected
+  let photoData = null;       // { base64, mimeType, fileName }
   let allMaterials = [];
+  let config = { maxItems: 10, cooldownMonths: 12, reasons: ['Damaged / Torn', 'Wrong size', 'Defective', 'Worn out', 'Other'], bypassReasons: ['Damaged / Torn', 'Wrong size', 'Defective'] };
 
   const copy = {
-    Exchange: { title: 'New exchange request', sub: 'Swap out uniform or equipment already issued to you.', legend: 'What are you requesting' },
-    Purchase: { title: 'New purchase request', sub: 'Buy a new item outright for one of the entities below.', legend: 'Item' },
+    Exchange: { title: 'New exchange request', sub: 'Swap out uniform or equipment already issued to you.', legend: 'What are you exchanging for' },
+    Purchase: { title: 'New purchase request', sub: 'Buy new items outright for one of the entities below.', legend: 'Items' },
   };
 
-  const tabNav = document.getElementById('tabNav');
-  const exchangeExtraFieldset = document.getElementById('exchangeExtraFieldset');
-  const exchangePhotoFieldset = document.getElementById('exchangePhotoFieldset');
-  const introTitle = document.getElementById('introTitle');
-  const introSub = document.getElementById('introSub');
-  const itemLegend = document.getElementById('itemLegend');
-  const materialSelect = document.getElementById('materialSelect');
-  const formAlert = document.getElementById('formAlert');
+  const $ = (id) => document.getElementById(id);
+  const tabNav = $('tabNav');
+  const formAlert = $('formAlert');
+  const itemsContainer = $('itemsContainer');
 
+  /* ------------------------------------------------------------------ utils */
   function escapeHtml(str) {
     return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
     }[c]));
   }
 
-  // Only allow http(s) links for photo URLs coming back from the sheet.
   function safeUrl(url) {
     const s = String(url || '').trim();
     return /^https?:\/\//i.test(s) ? s : '';
@@ -315,46 +329,42 @@
     formAlert.classList.add('error');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
-  function clearAlert() {
-    formAlert.textContent = '';
-    formAlert.classList.remove('error');
-  }
+  function clearAlert() { formAlert.textContent = ''; formAlert.classList.remove('error'); }
 
   function showView(id) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    $(id).classList.add('active');
   }
 
+  function setActiveTab(match) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', match(b)));
+  }
+
+  /* ------------------------------------------------------------- tab / mode */
   function applyRequestTypeUI() {
-    introTitle.textContent = copy[requestType].title;
-    introSub.textContent = copy[requestType].sub;
-    itemLegend.textContent = copy[requestType].legend;
+    $('introTitle').textContent = copy[requestType].title;
+    $('introSub').textContent = copy[requestType].sub;
+    $('itemLegend').textContent = copy[requestType].legend;
     const isExchange = requestType === 'Exchange';
-    exchangeExtraFieldset.hidden = !isExchange;
-    exchangePhotoFieldset.hidden = !isExchange;
+    $('exchangeExtraFieldset').hidden = !isExchange;
+    $('exchangePhotoFieldset').hidden = !isExchange;
   }
 
   tabNav.addEventListener('click', (e) => {
     const btn = e.target.closest('.tab-btn');
     if (!btn) return;
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    setActiveTab(b => b === btn);
 
-    if (btn.dataset.view === 'statusView') {
-      showView('statusView');
-      return;
-    }
+    if (btn.dataset.view === 'statusView') { showView('statusView'); return; }
 
     requestType = btn.dataset.type;
     applyRequestTypeUI();
     clearAlert();
     document.querySelectorAll('.field.invalid').forEach(f => f.classList.remove('invalid'));
-    refreshMaterialsForCurrentEntity();
     showView('requestView');
   });
 
-  // ---- Entity -> category eligibility ----
+  /* ---------------------------------------------- entity -> item eligibility */
   // AGS -> SO, ASM -> APO, AH -> AH. Items tagged "APO / SO / AH" suit all.
   // (The server re-checks this, so it cannot be bypassed.)
   const ENTITY_CODE = {
@@ -373,71 +383,175 @@
     return allMaterials.filter(m => categoryCodes(m.category).includes(code));
   }
 
-  function renderMaterialOptions(list, placeholder) {
-    if (list.length === 0) {
-      materialSelect.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>`;
-      materialSelect.disabled = true;
-      return;
-    }
-    materialSelect.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>` +
-      list.map(m => `<option value="${escapeHtml(m.name)}">${escapeHtml(m.name)}</option>`).join('');
-    materialSelect.disabled = false;
+  const STOCK_LABEL = { out: 'Out of stock', low: 'Low stock' };
+
+  /* ------------------------------------------------------------------- cart */
+  function lineEls() { return Array.from(itemsContainer.querySelectorAll('.item-line')); }
+
+  function materialOptionsHtml(list, selected) {
+    const entity = $('entity').value;
+    if (!entity) return '<option value="">Select entity first</option>';
+    if (!list.length) return '<option value="">No items available for this entity</option>';
+    return '<option value="">Select an item</option>' + list.map(m => {
+      const tag = STOCK_LABEL[m.stock] ? ' — ' + STOCK_LABEL[m.stock] : '';
+      return `<option value="${escapeHtml(m.name)}"${m.name === selected ? ' selected' : ''}>${escapeHtml(m.name + tag)}</option>`;
+    }).join('');
   }
 
-  function refreshMaterialsForCurrentEntity() {
-    const entity = document.getElementById('entity').value;
-    if (!entity) {
-      renderMaterialOptions([], 'Select entity first');
+  function addLine() {
+    if (lineEls().length >= config.maxItems) {
+      $('itemsHint').textContent = `You can request up to ${config.maxItems} items at a time.`;
       return;
     }
-    const filtered = materialsForEntity(entity);
-    renderMaterialOptions(filtered, filtered.length ? 'Select an item' : 'No items available for this entity');
+    const div = document.createElement('div');
+    div.className = 'item-line';
+    div.innerHTML = `
+      <div class="field line-material">
+        <label>Material name<span class="req">*</span></label>
+        <select class="sel-material" disabled></select>
+        <div class="error-text">Select a material.</div>
+        <div class="stock-note"></div>
+      </div>
+      <div class="field line-size" hidden>
+        <label>Size<span class="req">*</span></label>
+        <select class="sel-size"></select>
+        <div class="error-text">Choose a size.</div>
+      </div>
+      <div class="field line-qty">
+        <label>Quantity<span class="req">*</span></label>
+        <input type="number" class="inp-qty" value="1" min="1" max="100" inputmode="numeric">
+        <div class="error-text">Enter 1 to 100.</div>
+      </div>
+      <button type="button" class="line-remove" aria-label="Remove this item" title="Remove">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>`;
+    itemsContainer.appendChild(div);
+    fillLineMaterials(div, '');
+    refreshCartUI();
   }
 
-  document.getElementById('entity').addEventListener('change', refreshMaterialsForCurrentEntity);
+  function fillLineMaterials(line, selected) {
+    const sel = line.querySelector('.sel-material');
+    const list = materialsForEntity($('entity').value);
+    sel.innerHTML = materialOptionsHtml(list, selected);
+    sel.disabled = !$('entity').value || !list.length;
+    onMaterialChange(line);
+  }
 
+  function onMaterialChange(line) {
+    const name = line.querySelector('.sel-material').value;
+    const m = allMaterials.find(x => x.name === name);
+    const sizeField = line.querySelector('.line-size');
+    const sizeSel = line.querySelector('.sel-size');
+    const note = line.querySelector('.stock-note');
+
+    if (m && m.sizes && m.sizes.length) {
+      const prev = sizeSel.value;
+      sizeSel.innerHTML = '<option value="">Select size</option>' +
+        m.sizes.map(z => `<option value="${escapeHtml(z)}"${z === prev ? ' selected' : ''}>${escapeHtml(z)}</option>`).join('');
+      sizeField.hidden = false;
+    } else {
+      sizeSel.innerHTML = '';
+      sizeField.hidden = true;
+    }
+
+    if (m && m.stock === 'out') {
+      note.textContent = 'Currently out of stock — you can still submit and the store will process it once restocked.';
+      note.className = 'stock-note out';
+    } else if (m && m.stock === 'low') {
+      note.textContent = 'Low stock — limited quantity left.';
+      note.className = 'stock-note low';
+    } else {
+      note.textContent = '';
+      note.className = 'stock-note';
+    }
+  }
+
+  function refreshCartUI() {
+    const lines = lineEls();
+    lines.forEach(l => l.querySelector('.line-remove').style.visibility = lines.length > 1 ? 'visible' : 'hidden');
+    $('addItemBtn').hidden = lines.length >= config.maxItems;
+    if (lines.length < config.maxItems) $('itemsHint').textContent = '';
+  }
+
+  itemsContainer.addEventListener('change', (e) => {
+    const line = e.target.closest('.item-line');
+    if (!line) return;
+    if (e.target.classList.contains('sel-material')) {
+      line.querySelector('.line-material').classList.remove('invalid');
+      onMaterialChange(line);
+    }
+    if (e.target.classList.contains('sel-size')) line.querySelector('.line-size').classList.remove('invalid');
+  });
+
+  itemsContainer.addEventListener('click', (e) => {
+    const btn = e.target.closest('.line-remove');
+    if (!btn) return;
+    btn.closest('.item-line').remove();
+    refreshCartUI();
+  });
+
+  $('addItemBtn').addEventListener('click', addLine);
+
+  $('entity').addEventListener('change', () => {
+    lineEls().forEach(l => fillLineMaterials(l, l.querySelector('.sel-material').value));
+  });
+
+  function resetCart() {
+    itemsContainer.innerHTML = '';
+    addLine();
+  }
+
+  /* ------------------------------------------------------------- data loads */
   async function loadMaterials() {
     try {
       const res = await fetch(`${APPS_SCRIPT_URL}?action=getMaterials`);
       const materials = await res.json();
-
       if (!Array.isArray(materials) || materials.length === 0) {
-        materialSelect.innerHTML = '<option value="">No items found</option>';
+        showAlert('The item list is empty. Please contact the store team.');
         return;
       }
-
       allMaterials = materials;
-      refreshMaterialsForCurrentEntity();
-
+      lineEls().forEach(l => fillLineMaterials(l, ''));
     } catch (err) {
       showAlert('Could not load the item list. Refresh to try again.');
-      materialSelect.innerHTML = '<option value="">Failed to load</option>';
     }
   }
 
-  // ---- Auto-capitalize name (Title Case) ----
-  function toTitleCase(str) {
-    return str
-      .toLowerCase()
-      .replace(/(^|[\s\-'.])([a-z])/g, (match, sep, letter) => sep + letter.toUpperCase());
+  async function loadConfig() {
+    try {
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=getConfig`);
+      const c = await res.json();
+      if (c && Array.isArray(c.reasons)) config = c;
+    } catch (err) { /* defaults are fine */ }
+    $('reasonCategory').innerHTML = '<option value="">Select a reason</option>' +
+      config.reasons.map(r => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`).join('');
+    refreshCartUI();
   }
 
-  const staffNameInput = document.getElementById('staffName');
-  staffNameInput.addEventListener('blur', () => {
-    const value = staffNameInput.value.trim();
-    if (value) staffNameInput.value = toTitleCase(value);
+  $('reasonCategory').addEventListener('change', () => {
+    const r = $('reasonCategory').value;
+    $('detailsOpt').textContent = r === 'Other' ? '(required)' : '(optional)';
+    const limited = config.cooldownMonths > 0 && r && !config.bypassReasons.includes(r);
+    $('reasonHint').textContent = limited
+      ? `Note: the same item can be exchanged once every ${config.cooldownMonths} months unless it is damaged, defective or the wrong size.`
+      : '';
   });
 
-  // Digits only for SAP ID fields
+  /* ------------------------------------------------------------ small inputs */
+  function toTitleCase(str) {
+    return str.toLowerCase().replace(/(^|[\s\-'.])([a-z])/g, (m, sep, letter) => sep + letter.toUpperCase());
+  }
+  $('staffName').addEventListener('blur', () => {
+    const v = $('staffName').value.trim();
+    if (v) $('staffName').value = toTitleCase(v);
+  });
+
   ['sapId', 'lookupInput'].forEach(id => {
-    document.getElementById(id).addEventListener('input', (e) => {
-      e.target.value = e.target.value.replace(/\D/g, '');
-    });
+    $(id).addEventListener('input', (e) => { e.target.value = e.target.value.replace(/\D/g, ''); });
   });
 
-  // ---- Photo upload (Exchange only) ----
-  // Phone photos are often 4-10 MB. Shrink to max 1600px JPEG first so the
-  // upload is fast and stays within Apps Script request limits.
+  /* ------------------------------------------------------------- photo upload */
   function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -447,14 +561,12 @@
     });
   }
 
+  // Phone photos are often 4–10 MB: shrink to max 1600px JPEG first.
   async function prepareImage(file) {
-    if (!file.type || !file.type.startsWith('image/')) {
-      throw new Error('Please choose an image file.');
-    }
+    if (!file.type || !file.type.startsWith('image/')) throw new Error('Please choose an image file.');
     try {
       const bitmap = await createImageBitmap(file);
-      const maxSide = 1600;
-      const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+      const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
       const canvas = document.createElement('canvas');
       canvas.width = Math.round(bitmap.width * scale);
       canvas.height = Math.round(bitmap.height * scale);
@@ -463,13 +575,12 @@
       if (!blob) throw new Error('Compression failed');
       return { blob, mimeType: 'image/jpeg', fileName: file.name.replace(/\.[^.]+$/, '') + '.jpg' };
     } catch (err) {
-      // Browser couldn't decode it (e.g. HEIC) — fall back to the original if small enough.
       if (file.size > 6 * 1024 * 1024) throw new Error('That photo is too large. Please choose a smaller image.');
       return { blob: file, mimeType: file.type, fileName: file.name };
     }
   }
 
-  document.getElementById('itemPhoto').addEventListener('change', async (e) => {
+  $('itemPhoto').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) { photoData = null; return; }
     try {
@@ -485,248 +596,270 @@
     }
   });
 
-  // ---- Validation ----
-  const SAP_ID_PATTERN = /^25\d{6}$/; // 8 digits, must start with 25
+  /* -------------------------------------------------------------- validation */
+  const SAP_ID_PATTERN = /^25\d{6}$/;
+  const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  function setInvalid(fieldId, invalid, message) {
-    const el = document.getElementById(fieldId);
-    if (!el) return;
-    el.classList.toggle('invalid', invalid);
+  function setInvalid(el, invalid, message) {
+    const node = typeof el === 'string' ? $(el) : el;
+    if (!node) return;
+    node.classList.toggle('invalid', invalid);
     if (invalid && message) {
-      const msgEl = el.querySelector('.error-text');
-      if (msgEl) msgEl.textContent = message;
+      const msg = node.querySelector('.error-text');
+      if (msg) msg.textContent = message;
     }
-  }
-
-  function validateSapId() {
-    const value = document.getElementById('sapId').value.trim();
-    if (!value) {
-      setInvalid('field-sapId', true, 'Enter your SAP ID.');
-      return false;
-    }
-    if (!SAP_ID_PATTERN.test(value)) {
-      setInvalid('field-sapId', true, 'SAP ID must be 8 digits starting with 25 (e.g. 25012345).');
-      return false;
-    }
-    setInvalid('field-sapId', false);
-    return true;
   }
 
   function validate() {
     let ok = true;
-    if (!validateSapId()) ok = false;
+    const fail = (id, msg) => { setInvalid(id, true, msg); ok = false; };
+    const pass = (id) => setInvalid(id, false);
+    const val = (id) => $(id).value.trim();
 
-    const qtyValue = Number(document.getElementById('qty').value);
+    const sap = val('sapId');
+    if (!sap) fail('field-sapId', 'Enter your SAP ID.');
+    else if (!SAP_ID_PATTERN.test(sap)) fail('field-sapId', 'SAP ID must be 8 digits starting with 25 (e.g. 25012345).');
+    else pass('field-sapId');
 
-    let checks = [
-      ['field-material', document.getElementById('materialSelect').value],
-      ['field-qty', Number.isInteger(qtyValue) && qtyValue >= 1 && qtyValue <= 100],
-      ['field-staffName', document.getElementById('staffName').value.trim()],
-      ['field-serviceNumber', document.getElementById('serviceNumber').value.trim()],
-      ['field-contactNumber', document.getElementById('contactNumber').value.trim()],
-      ['field-entity', document.getElementById('entity').value],
-    ];
+    [['field-staffName', 'staffName'], ['field-serviceNumber', 'serviceNumber'],
+     ['field-contactNumber', 'contactNumber'], ['field-entity', 'entity']]
+      .forEach(([f, i]) => val(i) ? pass(f) : fail(f));
+
+    const email = val('email');
+    if (email && !EMAIL_PATTERN.test(email)) fail('field-email'); else pass('field-email');
 
     if (requestType === 'Exchange') {
-      checks = checks.concat([
-        ['field-ftpt', document.getElementById('ftpt').value],
-        ['field-div', document.getElementById('div').value.trim()],
-        ['field-worksite', document.getElementById('worksite').value.trim()],
-        ['field-reasonForExchange', document.getElementById('reasonForExchange').value.trim()],
-        ['field-itemPhoto', !!photoData],
-      ]);
+      [['field-ftpt', 'ftpt'], ['field-div', 'div'], ['field-worksite', 'worksite'],
+       ['field-reasonCategory', 'reasonCategory']].forEach(([f, i]) => val(i) ? pass(f) : fail(f));
+      if ($('reasonCategory').value === 'Other' && !val('reasonDetails')) fail('field-reasonDetails'); else pass('field-reasonDetails');
+      photoData ? pass('field-itemPhoto') : fail('field-itemPhoto');
     }
 
-    checks.forEach(([id, val]) => {
-      const invalid = !val;
-      setInvalid(id, invalid);
-      if (invalid) ok = false;
+    // cart lines
+    const seen = {};
+    lineEls().forEach(line => {
+      const mField = line.querySelector('.line-material');
+      const sField = line.querySelector('.line-size');
+      const qField = line.querySelector('.line-qty');
+      const name = line.querySelector('.sel-material').value;
+      const size = line.querySelector('.sel-size').value;
+      const qty = Number(line.querySelector('.inp-qty').value);
+
+      name ? setInvalid(mField, false) : (setInvalid(mField, true, 'Select a material.'), ok = false);
+      if (!sField.hidden) size ? setInvalid(sField, false) : (setInvalid(sField, true), ok = false);
+      (Number.isInteger(qty) && qty >= 1 && qty <= 100) ? setInvalid(qField, false) : (setInvalid(qField, true), ok = false);
+
+      if (name) {
+        const key = name + '|' + size;
+        if (seen[key]) { setInvalid(mField, true, 'This item is already on another line.'); ok = false; }
+        seen[key] = true;
+      }
     });
 
-    if (!ok) {
-      const firstBad = document.querySelector('.field.invalid');
-      if (firstBad) firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+    if ($('consent').checked) $('consentError').classList.remove('show');
+    else { $('consentError').classList.add('show'); ok = false; }
 
+    if (!ok) {
+      const first = document.querySelector('.field.invalid, .consent-error.show');
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
     return ok;
   }
 
   function buildPayload() {
+    const items = lineEls().map(line => ({
+      materialName: line.querySelector('.sel-material').value,
+      size: line.querySelector('.line-size').hidden ? '' : line.querySelector('.sel-size').value,
+      qty: Number(line.querySelector('.inp-qty').value),
+    }));
+
     const base = {
-      materialName: document.getElementById('materialSelect').value,
-      qty: Number(document.getElementById('qty').value),
-      requestType: requestType,
-      sapId: document.getElementById('sapId').value.trim(),
-      staffName: document.getElementById('staffName').value.trim(),
-      serviceNumber: document.getElementById('serviceNumber').value.trim(),
-      contactNumber: document.getElementById('contactNumber').value.trim(),
-      entity: document.getElementById('entity').value,
+      action: 'submit',
+      requestType,
+      items,
+      sapId: $('sapId').value.trim(),
+      staffName: $('staffName').value.trim(),
+      serviceNumber: $('serviceNumber').value.trim(),
+      contactNumber: $('contactNumber').value.trim(),
+      email: $('email').value.trim(),
+      entity: $('entity').value,
+      consent: $('consent').checked,
     };
 
     if (requestType === 'Exchange') {
-      return Object.assign(base, {
-        ftpt: document.getElementById('ftpt').value,
-        div: document.getElementById('div').value.trim(),
-        worksite: document.getElementById('worksite').value.trim(),
-        reasonForExchange: document.getElementById('reasonForExchange').value.trim(),
+      Object.assign(base, {
+        ftpt: $('ftpt').value,
+        div: $('div').value.trim(),
+        worksite: $('worksite').value.trim(),
+        reasonCategory: $('reasonCategory').value,
+        reasonDetails: $('reasonDetails').value.trim(),
         photoBase64: photoData ? photoData.base64 : '',
         photoMimeType: photoData ? photoData.mimeType : '',
         photoFileName: photoData ? photoData.fileName : '',
       });
     }
-
     return base;
   }
 
-  // Build the label/value rows used by both the confirm modal and success screen.
+  function itemLabel(it) { return `${it.materialName || it.item}${it.size ? ' (' + it.size + ')' : ''} × ${it.qty}`; }
+
   function summaryRows(p) {
     const rows = [
+      ['Request type', p.requestType],
       ['Staff name', p.staffName],
       ['SAP ID', p.sapId],
       ['Service number', p.serviceNumber],
       ['Entity', p.entity],
-      ['Item', p.materialName],
-      ['Quantity', p.qty],
     ];
+    if (p.email) rows.push(['Email', p.email]);
     if (p.requestType === 'Exchange') {
-      rows.push(['Reason', p.reasonForExchange]);
+      rows.push(['Reason', p.reasonCategory + (p.reasonDetails ? ' — ' + p.reasonDetails : '')]);
       rows.push(['Photo', p.photoFileName || 'Not attached']);
     }
-    rows.unshift(['Request type', p.requestType]);
     return rows;
   }
 
-  function rowsToHtml(rows, rowClass) {
-    return rows.map(([k, v]) =>
-      `<div class="${rowClass}"><span>${escapeHtml(k)}</span><span>${escapeHtml(v)}</span></div>`
-    ).join('');
+  function rowsToHtml(rows, cls) {
+    return rows.map(([k, v]) => `<div class="${cls}"><span>${escapeHtml(k)}</span><span>${escapeHtml(v)}</span></div>`).join('');
   }
 
-  // ---- Confirm modal ----
-  const confirmModal = document.getElementById('confirmModal');
-  const modalSummary = document.getElementById('modalSummary');
+  /* ----------------------------------------------------------- confirm modal */
+  const confirmModal = $('confirmModal');
 
-  document.getElementById('reviewBtn').addEventListener('click', () => {
+  $('reviewBtn').addEventListener('click', () => {
     clearAlert();
     if (!validate()) return;
-
-    modalSummary.innerHTML = rowsToHtml(summaryRows(buildPayload()), 'row');
+    const p = buildPayload();
+    $('modalSummary').innerHTML = rowsToHtml(summaryRows(p), 'row') +
+      `<div class="row items-row"><span>${p.items.length > 1 ? 'Items' : 'Item'}</span><span>${p.items.map(i => escapeHtml(itemLabel(i))).join('<br>')}</span></div>`;
     confirmModal.classList.add('active');
   });
 
-  document.getElementById('editBtn').addEventListener('click', () => {
-    confirmModal.classList.remove('active');
-  });
-
-  // Click outside the box (but not while sending) closes the modal
+  $('editBtn').addEventListener('click', () => confirmModal.classList.remove('active'));
   confirmModal.addEventListener('click', (e) => {
-    if (e.target === confirmModal && !document.getElementById('confirmSendBtn').disabled) {
-      confirmModal.classList.remove('active');
-    }
+    if (e.target === confirmModal && !$('confirmSendBtn').disabled) confirmModal.classList.remove('active');
   });
-
-  document.getElementById('confirmSendBtn').addEventListener('click', executeSubmission);
+  $('confirmSendBtn').addEventListener('click', executeSubmission);
 
   async function executeSubmission() {
-    const btn = document.getElementById('confirmSendBtn');
-    const spinner = document.getElementById('btnSpinner');
-    const btnText = document.getElementById('btnText');
-
+    const btn = $('confirmSendBtn');
     btn.disabled = true;
-    spinner.style.display = 'inline-block';
-    btnText.textContent = 'Sending…';
+    $('btnSpinner').style.display = 'inline-block';
+    $('btnText').textContent = 'Sending…';
 
     try {
       const payload = buildPayload();
-
       // No Content-Type header on purpose: keeps this a "simple" request so
       // the browser skips the CORS preflight that Apps Script can't answer.
-      const res = await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
       const result = await res.json();
-
       if (result.status !== 'ok') throw new Error(result.message || 'Unknown error');
 
       confirmModal.classList.remove('active');
-      showSuccess(payload, result.requestId);
+      showSuccess(payload, result);
 
-      document.getElementById('requestForm').reset();
+      $('requestForm').reset();
       document.querySelectorAll('.field.invalid').forEach(f => f.classList.remove('invalid'));
+      $('reasonHint').textContent = '';
       photoData = null;
-      refreshMaterialsForCurrentEntity();
-
+      resetCart();
     } catch (err) {
       confirmModal.classList.remove('active');
       showAlert('Could not submit: ' + err.message);
     } finally {
       btn.disabled = false;
-      spinner.style.display = 'none';
-      btnText.textContent = 'Confirm & send';
+      $('btnSpinner').style.display = 'none';
+      $('btnText').textContent = 'Confirm & send';
     }
   }
 
-  function showSuccess(payload, requestId) {
-    document.getElementById('reqCodeDisplay').textContent = requestId;
-    document.getElementById('successSummary').innerHTML = rowsToHtml(summaryRows(payload), 'result-row');
+  function showSuccess(payload, result) {
+    $('reqCodeDisplay').textContent = result.requestId;
+    $('oosBanner').classList.toggle('show', result.outOfStockCount > 0);
+
+    const itemRows = result.items.map(it =>
+      `<div class="result-row"><span>${escapeHtml(it.item + (it.size ? ' (' + it.size + ')' : ''))}</span><span>× ${escapeHtml(it.qty)}${it.status === 'Out of Stock' ? ' · <em class="oos-tag">Out of stock</em>' : ''}</span></div>`
+    ).join('');
+
+    $('successSummary').innerHTML = rowsToHtml(summaryRows(payload), 'result-row') + itemRows;
     showView('successView');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  document.getElementById('copyBtn').addEventListener('click', () => {
-    const code = document.getElementById('reqCodeDisplay').textContent;
-    const btn = document.getElementById('copyBtn');
+  $('copyBtn').addEventListener('click', () => {
+    const code = $('reqCodeDisplay').textContent;
+    const btn = $('copyBtn');
     const original = btn.textContent;
-    const done = (text) => { btn.textContent = text; setTimeout(() => { btn.textContent = original; }, 1500); };
-
+    const done = (t) => { btn.textContent = t; setTimeout(() => { btn.textContent = original; }, 1500); };
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(code).then(() => done('Copied!'), () => done('Copy failed'));
-    } else {
-      done('Copy failed');
+    } else { done('Copy failed'); }
+  });
+
+  $('againBtn').addEventListener('click', () => showView('requestView'));
+  $('trackBtn').addEventListener('click', () => {
+    setActiveTab(b => b.dataset.view === 'statusView');
+    showView('statusView');
+  });
+
+  /* ------------------------------------------------------------------ tracker */
+  const lookupBtn = $('lookupBtn');
+  const lookupInput = $('lookupInput');
+  const lookupServiceInput = $('lookupServiceInput');
+  const lookupResult = $('lookupResult');
+  const notFound = $('notFound');
+  const notFoundText = $('notFoundText');
+
+  const STATUS_CLASS = { 'Out of Stock': 'OutOfStock', 'Ready for Collection': 'Ready' };
+  const statusClass = (s) => STATUS_CLASS[s] || String(s).replace(/[^A-Za-z]/g, '');
+
+  function lineDetail(r) {
+    if (r.status === 'Rejected' && r.remarks) return `<div class="line-note rejected"><strong>Reason:</strong> ${escapeHtml(r.remarks)}</div>`;
+    if (r.status === 'Ready for Collection') {
+      return `<div class="line-note ready"><strong>Ready to collect</strong>${r.collectBy ? ' — please collect by ' + escapeHtml(r.collectBy) : ''}${r.remarks ? '<br>' + escapeHtml(r.remarks) : ''}</div>`;
     }
-  });
-
-  document.getElementById('againBtn').addEventListener('click', () => {
-    showView('requestView');
-  });
-
-  // ---- Track by SAP ID + service number ----
-  const lookupBtn = document.getElementById('lookupBtn');
-  const lookupInput = document.getElementById('lookupInput');
-  const lookupServiceInput = document.getElementById('lookupServiceInput');
-  const lookupResult = document.getElementById('lookupResult');
-  const notFound = document.getElementById('notFound');
-  const notFoundText = document.getElementById('notFoundText');
+    if (r.status === 'Out of Stock') return `<div class="line-note oos">Out of stock — your request stays open until stock arrives.${r.remarks ? '<br>' + escapeHtml(r.remarks) : ''}</div>`;
+    if (r.status === 'Uncollected') return `<div class="line-note rejected">Not collected in time and released back to stock. Please submit a new request if you still need it.</div>`;
+    return '';
+  }
 
   function buildRecordsHtml(requests) {
-    return requests.map(r => {
-      const statusClass = r.status === 'Out of Stock' ? 'OutOfStock' : escapeHtml(r.status);
-      const rows = [['Item', r.materialName], ['Quantity', r.qty]];
-      if (r.entity) rows.push(['Entity', r.entity]);
-      // Reason is only shown while actionable (Pending or Rejected).
-      if (r.requestType === 'Exchange' && r.reason && (r.status === 'Pending' || r.status === 'Rejected')) {
-        rows.push(['Reason', r.reason]);
-      }
+    const groups = [];
+    const index = {};
+    requests.forEach(r => {
+      if (!(r.requestId in index)) { index[r.requestId] = groups.length; groups.push({ id: r.requestId, lines: [] }); }
+      groups[index[r.requestId]].lines.push(r);
+    });
 
-      const link = safeUrl(r.photoLink);
-      const photoRow = link
-        ? `<div class="record-row"><span>Photo</span><span><a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">View photo</a></span></div>`
-        : '';
+    return groups.map(g => {
+      const first = g.lines[0];
+      const reason = g.lines.map(l => l.reason).find(Boolean);
+      const photo = safeUrl(g.lines.map(l => l.photoLink).find(Boolean));
+      const showReason = reason && g.lines.some(l => l.status === 'Pending' || l.status === 'Rejected');
+      const lines = g.lines.map(l => `
+        <div class="line-row">
+          <div class="line-main">
+            <span class="line-item">${escapeHtml(l.materialName)}${l.size ? ' <span class="size-chip">' + escapeHtml(l.size) + '</span>' : ''}</span>
+            <span class="line-qty-t">× ${escapeHtml(l.qty)}</span>
+          </div>
+          <span class="status-pill ${statusClass(l.status)}">${escapeHtml(l.status)}</span>
+          ${lineDetail(l)}
+        </div>`).join('');
 
       return `
-        <div class="record-card ${statusClass}">
+        <div class="req-group">
           <div class="record-top">
             <div>
-              <span class="record-code">${escapeHtml(r.requestId)}</span>
-              <span class="record-type">${escapeHtml(r.requestType)}</span>
+              <span class="record-code">${escapeHtml(g.id)}</span>
+              <span class="record-type">${escapeHtml(first.requestType)}</span>
             </div>
-            <span class="status-pill ${statusClass}">${escapeHtml(r.status)}</span>
+            <span class="submitted-on">${first.submittedOn ? 'Submitted ' + escapeHtml(first.submittedOn) : ''}</span>
           </div>
-          ${rowsToHtml(rows, 'record-row')}
-          ${photoRow}
-        </div>
-      `;
+          ${lines}
+          ${first.entity ? `<div class="record-row"><span>Entity</span><span>${escapeHtml(first.entity)}</span></div>` : ''}
+          ${showReason ? `<div class="record-row"><span>Reason</span><span>${escapeHtml(reason)}</span></div>` : ''}
+          ${photo ? `<div class="record-row"><span>Photo</span><span><a href="${escapeHtml(photo)}" target="_blank" rel="noopener noreferrer">View photo</a></span></div>` : ''}
+        </div>`;
     }).join('');
   }
 
@@ -744,7 +877,6 @@
 
     lookupBtn.disabled = true;
     lookupBtn.textContent = 'Searching…';
-
     try {
       const res = await fetch(`${APPS_SCRIPT_URL}?action=getBySapId&sapId=${encodeURIComponent(sapValue)}&serviceNumber=${encodeURIComponent(serviceValue)}`);
       const data = await res.json();
@@ -754,10 +886,9 @@
         notFound.style.display = 'block';
         return;
       }
-
-      const header = `<div class="verified-name">Showing requests for <strong>${escapeHtml(data.staffName)}</strong></div>`;
-      lookupResult.innerHTML = header + buildRecordsHtml(data.requests);
-
+      lookupResult.innerHTML =
+        `<div class="verified-name">Showing requests for <strong>${escapeHtml(data.staffName)}</strong></div>` +
+        buildRecordsHtml(data.requests);
     } catch (err) {
       notFoundText.textContent = 'Could not check records right now. Please try again.';
       notFound.style.display = 'block';
@@ -771,8 +902,10 @@
   lookupInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkStatus(); });
   lookupServiceInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkStatus(); });
 
-  // ---- Init ----
+  /* --------------------------------------------------------------------- init */
   applyRequestTypeUI();
+  resetCart();
+  loadConfig();
   loadMaterials();
 </script>
 
