@@ -8,484 +8,22 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --ink-900: #0F1729;
-      --ink-700: #344054;
-      --ink-500: #667085;
-      --ink-300: #98A2B3;
-      --line: #E4E7EC;
-      --line-soft: #EEF1F5;
-      --surface: #FFFFFF;
-      --bg: #F7F8FA;
-
-      --brand-600: #00A8E8;
-      --brand-700: #0086BA;
-      --brand-50: #E6F7FF;
-      --brand-100: #CDEFFF;
-
-      --green-600: #17B26A;
-      --green-50: #EDFCF2;
-      --amber-600: #F79009;
-      --amber-50: #FFFAEB;
-      --red-600: #F04438;
-      --red-50: #FEF3F2;
-
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --shadow-card: 0 1px 2px rgba(16,24,40,0.04), 0 4px 16px rgba(16,24,40,0.06);
-      --shadow-pop: 0 4px 6px rgba(16,24,40,0.05), 0 20px 40px rgba(16,24,40,0.14);
-    }
-
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-
-    body {
-      margin: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      color: var(--ink-900);
-      background: var(--bg);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .accent-strip {
-      height: 3px;
-      background: linear-gradient(90deg, var(--brand-600), #37D6FF, var(--brand-600));
-      background-size: 200% 100%;
-    }
-
-    /* ---------- Header ---------- */
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--line);
-      padding: 18px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-
-    .brand-group { display: flex; align-items: center; gap: 16px; }
-    .brand-logo { height: 60px; width: auto; display: block; }
-    .brand-divider { width: 1px; height: 34px; background: var(--line); }
-    .brand-title { font-size: 15px; font-weight: 700; color: var(--ink-900); letter-spacing: -0.01em; }
-    .brand-subtitle { font-size: 12px; color: var(--ink-500); margin-top: 1px; }
-
-    nav.tabs {
-      display: flex;
-      gap: 4px;
-      background: var(--bg);
-      padding: 4px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-    }
-
-    .tab-btn {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 9px 16px;
-      border: none;
-      background: transparent;
-      border-radius: 999px;
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--ink-500);
-      cursor: pointer;
-      transition: background 0.15s ease, color 0.15s ease;
-      white-space: nowrap;
-    }
-
-    .tab-btn svg { flex-shrink: 0; }
-    .tab-btn:hover { color: var(--ink-700); }
-    .tab-btn.active { background: var(--ink-900); color: #fff; }
-
-    /* ---------- Main ---------- */
-    main {
-      width: 100%;
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 44px 20px 64px;
-      flex-grow: 1;
-    }
-
-    .view { display: none; }
-    .view.active { display: block; }
-
-    .intro { margin-bottom: 24px; }
-    .intro h1 { font-size: 21px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 6px; }
-    .intro p { font-size: 13.5px; color: var(--ink-500); margin: 0; line-height: 1.5; }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-card);
-      padding: 38px 40px 42px;
-    }
-
-    .alert {
-      display: none;
-      font-size: 13px;
-      padding: 12px 14px;
-      border-radius: var(--radius-sm);
-      margin-bottom: 20px;
-      line-height: 1.5;
-    }
-    .alert.error { display: block; background: var(--red-50); color: #B42318; border: 1px solid #FDA29B; }
-
-    fieldset { border: none; padding: 0; margin: 0 0 26px; }
-    fieldset:last-of-type { margin-bottom: 0; }
-
-    legend {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      color: var(--ink-900);
-      padding: 0 0 12px;
-      width: 100%;
-      border-bottom: 1px solid var(--line-soft);
-      margin-bottom: 18px;
-    }
-
-    .field { margin-bottom: 19px; }
-    .field:last-child { margin-bottom: 0; }
-
-    label {
-      display: block;
-      font-size: 13.5px;
-      font-weight: 600;
-      margin-bottom: 7px;
-      color: var(--ink-700);
-    }
-    label .req { color: var(--red-600); margin-left: 2px; }
-
-    input[type="text"],
-    input[type="tel"],
-    input[type="number"],
-    select {
-      width: 100%;
-      padding: 13px 15px;
-      font-size: 15px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-sm);
-      background: #FCFCFD;
-      color: var(--ink-900);
-      font-family: inherit;
-      transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
-    }
-
-    input[type="file"] {
-      width: 100%;
-      padding: 11px 13px;
-      font-size: 13px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-sm);
-      background: #FCFCFD;
-      color: var(--ink-700);
-      font-family: inherit;
-    }
-
-    input:focus, select:focus {
-      outline: none;
-      border-color: var(--brand-600);
-      background: #fff;
-      box-shadow: 0 0 0 3.5px var(--brand-100);
-    }
-
-    select:disabled, input:disabled { opacity: 0.55; }
-
-    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .row-item-qty { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
-
-    .error-text {
-      color: var(--red-600);
-      font-size: 11.5px;
-      margin-top: 5px;
-      display: none;
-    }
-    .field.invalid input, .field.invalid select { border-color: var(--red-600); }
-    .field.invalid .error-text { display: block; }
-
-    .helper-note {
-      font-size: 12.5px;
-      color: var(--ink-500);
-      background: var(--brand-50);
-      border: 1px solid var(--brand-100);
-      border-radius: var(--radius-sm);
-      padding: 10px 13px;
-      margin-bottom: 20px;
-      line-height: 1.5;
-    }
-
-    button.submit {
-      width: 100%;
-      padding: 15px;
-      background: var(--ink-900);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-sm);
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: background 0.15s ease, transform 0.1s ease;
-    }
-    button.submit:hover { background: var(--brand-700); }
-    button.submit:active { transform: translateY(1px); }
-    button.submit:disabled { background: var(--ink-300); cursor: not-allowed; }
-
-    .spinner {
-      width: 15px; height: 15px;
-      border: 2px solid rgba(255,255,255,0.35);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 0.7s linear infinite;
-      display: none;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ---------- Modal ---------- */
-    .modal-backdrop {
-      position: fixed; inset: 0;
-      background: rgba(15,23,41,0.55);
-      backdrop-filter: blur(2px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-      padding: 20px;
-    }
-    .modal-backdrop.active { display: flex; }
-
-    .modal-box {
-      background: #fff;
-      border-radius: var(--radius-lg);
-      max-width: 420px;
-      width: 100%;
-      padding: 26px;
-      box-shadow: var(--shadow-pop);
-      animation: modalIn 0.18s cubic-bezier(0.16,1,0.3,1);
-    }
-    @keyframes modalIn { from { transform: translateY(8px) scale(0.98); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
-
-    .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-    .modal-sub { font-size: 12.5px; color: var(--ink-500); margin-bottom: 18px; }
-
-    .modal-summary {
-      background: var(--bg);
-      border-radius: var(--radius-sm);
-      padding: 14px 16px;
-      margin-bottom: 20px;
-    }
-    .modal-summary .row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; gap: 12px; }
-    .modal-summary .row span:first-child { color: var(--ink-500); flex-shrink: 0; }
-    .modal-summary .row span:last-child { font-weight: 600; text-align: right; }
-
-    .modal-actions { display: flex; gap: 10px; }
-    .btn-ghost {
-      flex: 1;
-      background: var(--bg);
-      color: var(--ink-700);
-      font-weight: 600;
-      font-size: 13.5px;
-      padding: 11px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-    }
-    .btn-ghost:hover { background: var(--line-soft); }
-    .modal-actions .submit { margin-top: 0; flex: 1.3; }
-
-    /* ---------- Success screen ---------- */
-    .success-icon {
-      width: 52px; height: 52px;
-      border-radius: 50%;
-      background: var(--green-50);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 18px;
-    }
-
-    .req-chip {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--bg);
-      border: 1px dashed var(--line);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      margin: 18px 0 22px;
-    }
-    .req-chip .code {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 17px;
-      font-weight: 600;
-      color: var(--ink-900);
-    }
-    .req-chip button {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 7px;
-      padding: 6px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--ink-700);
-      cursor: pointer;
-    }
-    .req-chip button:hover { background: var(--line-soft); }
-
-    .again-btn {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      color: var(--ink-900);
-      padding: 12px;
-      border-radius: var(--radius-sm);
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .again-btn:hover { background: var(--line-soft); }
-
-    /* ---------- Status tracker ---------- */
-    .lookup-row { display: flex; gap: 10px; margin-bottom: 4px; }
-    .lookup-row input { flex: 1; }
-    .lookup-row button {
-      padding: 10px 20px;
-      border-radius: var(--radius-sm);
-      border: none;
-      background: var(--ink-900);
-      color: #fff;
-      font-weight: 700;
-      font-size: 13.5px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .lookup-row button:hover { background: var(--brand-700); }
-    .lookup-row button:disabled { background: var(--ink-300); cursor: not-allowed; }
-
-    .lookup-hint {
-      font-size: 11.5px;
-      color: var(--ink-500);
-      margin: 8px 0 0;
-      line-height: 1.5;
-    }
-
-    .lookup-result { margin-top: 22px; display: flex; flex-direction: column; gap: 12px; }
-
-    .verified-name {
-      font-size: 12.5px;
-      color: var(--ink-500);
-    }
-    .verified-name strong { color: var(--ink-900); }
-
-    .record-card {
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-    }
-    .record-card.Pending { background: var(--bg); border-color: var(--line); }
-    .record-card.Approved { background: var(--green-50); border-color: #A6F4C5; }
-    .record-card.Rejected { background: var(--red-50); border-color: #FDA29B; }
-    .record-card.OutOfStock { background: var(--brand-50); border-color: var(--brand-100); }
-    .record-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .record-code { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: var(--ink-900); }
-    .record-type {
-      font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
-      color: var(--ink-500); background: var(--line-soft); padding: 3px 8px; border-radius: 5px; margin-left: 8px;
-    }
-    .status-pill { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
-    .status-pill.Pending { color: var(--amber-600); background: var(--amber-50); }
-    .status-pill.Approved { color: var(--green-600); background: var(--green-50); }
-    .status-pill.Rejected { color: var(--red-600); background: var(--red-50); }
-    .status-pill.OutOfStock { color: var(--brand-700); background: var(--brand-100); }
-
-    .record-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; gap: 12px; }
-    .record-row span:first-child { color: var(--ink-500); flex-shrink: 0; }
-    .record-row span:last-child { font-weight: 600; text-align: right; }
-    .record-row a { color: var(--brand-600); font-weight: 600; text-decoration: none; }
-    .record-row a:hover { text-decoration: underline; }
-
-    .result-card {
-      background: var(--bg);
-      border-radius: var(--radius-md);
-      padding: 18px 20px;
-    }
-    .result-row { display: flex; justify-content: space-between; font-size: 13.5px; padding: 8px 0; border-bottom: 1px solid var(--line); gap: 12px; }
-    .result-row:last-child { border-bottom: none; }
-    .result-row span:first-child { color: var(--ink-500); flex-shrink: 0; }
-    .result-row span:last-child { font-weight: 600; text-align: right; }
-
-    .empty-state {
-      display: none;
-      text-align: center;
-      padding: 30px 20px;
-      color: var(--ink-500);
-      font-size: 13px;
-    }
-    .empty-state svg { margin-bottom: 10px; }
-
-    .notice-box {
-      margin-top: 22px;
-      font-size: 12.5px;
-      color: var(--ink-700);
-      background: var(--amber-50);
-      border: 1px solid #FEC84B;
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-      line-height: 1.6;
-    }
-    .notice-box strong { color: var(--ink-900); }
-
-    footer {
-      padding: 22px;
-      font-size: 12px;
-      color: var(--ink-300);
-      text-align: center;
-      border-top: 1px solid var(--line);
-      background: var(--surface);
-    }
-
-    @media (max-width: 640px) {
-      header { padding: 14px 18px; }
-      .brand-title { font-size: 13.5px; }
-      .brand-subtitle { display: none; }
-      nav.tabs { width: 100%; justify-content: center; }
-      main { padding: 30px 16px 48px; }
-      .card { padding: 22px 18px 26px; }
-      .row2, .row-item-qty { grid-template-columns: 1fr; }
-      .lookup-row { flex-direction: column; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="accent-strip"></div>
-
 <header>
   <div class="brand-group">
-    <!-- Placeholder — swap for the real AETOS logo PNG once supplied -->
+    <!-- Placeholder — swap for the real AETOS logo once supplied -->
     <svg class="brand-logo" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AETOS logo placeholder">
-      <rect width="60" height="60" rx="14" fill="#0F1729"/>
-      <text x="30" y="39" font-family="Inter, -apple-system, sans-serif" font-size="24" font-weight="800" fill="#ffffff" text-anchor="middle">A</text>
+      <defs>
+        <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#22BDF5"/>
+          <stop offset="1" stop-color="#1B4DB1"/>
+        </linearGradient>
+      </defs>
+      <rect width="60" height="60" rx="14" fill="url(#logoGrad)"/>
+      <text x="30" y="40" font-family="Inter, -apple-system, sans-serif" font-size="26" font-weight="800" fill="#ffffff" text-anchor="middle">A</text>
     </svg>
     <div class="brand-divider"></div>
     <div>
@@ -494,22 +32,22 @@
     </div>
   </div>
 
-  <nav class="tabs" id="tabNav">
+  <nav class="tabs" id="tabNav" aria-label="Portal sections">
     <button class="tab-btn active" data-view="requestView" data-type="Exchange" type="button">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path d="M4 8h13M17 8l-3.5-3.5M17 8l-3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M20 16H7M7 16l3.5-3.5M7 16l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       Exchange
     </button>
     <button class="tab-btn" data-view="requestView" data-type="Purchase" type="button">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path d="M6 8V6a6 6 0 1112 0v2h1a1 1 0 011 1v11a2 2 0 01-2 2H6a2 2 0 01-2-2V9a1 1 0 011-1h1zm2 0h8V6a4 4 0 00-8 0v2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
       </svg>
       Purchase
     </button>
     <button class="tab-btn" data-view="statusView" type="button">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/>
         <path d="M20 20l-4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
       </svg>
@@ -517,6 +55,8 @@
     </button>
   </nav>
 </header>
+
+<div class="hero" aria-hidden="true"></div>
 
 <main>
 
@@ -528,20 +68,19 @@
     </div>
 
     <div class="card">
-      <div class="alert" id="formAlert"></div>
+      <div class="alert" id="formAlert" role="alert"></div>
 
       <form id="requestForm" novalidate>
 
-        <!-- Shared: identity (both Exchange and Purchase). SAP ID + Service
-             Number together are the verified identity pair used later on
-             the Track page — Staff Name is for display/contact only. -->
+        <!-- Shared: identity. SAP ID + Service Number are the verified pair
+             used on the Track page. Staff name is for display/contact only. -->
         <fieldset id="identityFieldset">
-          <legend>YOUR DETAILS</legend>
+          <div class="section-title">Your details</div>
 
           <div class="row2">
             <div class="field" id="field-sapId">
               <label for="sapId">SAP ID<span class="req">*</span></label>
-              <input type="text" id="sapId" inputmode="numeric" maxlength="8">
+              <input type="text" id="sapId" inputmode="numeric" maxlength="8" placeholder="e.g. 25012345" autocomplete="off">
               <div class="error-text">Enter your SAP ID.</div>
             </div>
             <div class="field" id="field-staffName">
@@ -554,20 +93,20 @@
           <div class="row2">
             <div class="field" id="field-serviceNumber">
               <label for="serviceNumber">Service number<span class="req">*</span></label>
-              <input type="text" id="serviceNumber">
+              <input type="text" id="serviceNumber" autocomplete="off">
               <div class="error-text">Enter your service number.</div>
             </div>
             <div class="field" id="field-contactNumber">
               <label for="contactNumber">Contact number<span class="req">*</span></label>
-              <input type="tel" id="contactNumber">
+              <input type="tel" id="contactNumber" autocomplete="tel">
               <div class="error-text">Enter a contact number.</div>
             </div>
           </div>
         </fieldset>
 
-        <!-- Shared: entity (used for item eligibility AND to tag your unique Emp ID) -->
+        <!-- Shared: entity -->
         <fieldset id="entityFieldset">
-          <legend>ENTITY</legend>
+          <div class="section-title">Entity</div>
           <div class="helper-note">Your entity determines which items you're eligible to request. Together with your SAP ID and service number, it's also used to verify your identity when you track your requests later.</div>
           <div class="field" id="field-entity">
             <label for="entity">Entity<span class="req">*</span></label>
@@ -583,7 +122,7 @@
 
         <!-- Exchange-only: additional details -->
         <fieldset id="exchangeExtraFieldset">
-          <legend>ADDITIONAL DETAILS</legend>
+          <div class="section-title">Additional details</div>
 
           <div class="row2">
             <div class="field" id="field-ftpt">
@@ -609,9 +148,9 @@
           </div>
         </fieldset>
 
-        <!-- Exchange-only: reason + photo of the item being exchanged -->
+        <!-- Exchange-only: reason + photo -->
         <fieldset id="exchangePhotoFieldset">
-          <legend>ITEM CONDITION</legend>
+          <div class="section-title">Item condition</div>
 
           <div class="field" id="field-reasonForExchange">
             <label for="reasonForExchange">Reason for exchange<span class="req">*</span></label>
@@ -628,7 +167,7 @@
 
         <!-- Shared: item -->
         <fieldset>
-          <legend id="itemLegend">WHAT ARE YOU REQUESTING</legend>
+          <div class="section-title" id="itemLegend">What are you requesting</div>
           <div class="row-item-qty">
             <div class="field" id="field-material">
               <label for="materialSelect">Material name<span class="req">*</span></label>
@@ -640,7 +179,7 @@
             <div class="field" id="field-qty">
               <label for="qty">Quantity<span class="req">*</span></label>
               <input type="number" id="qty" value="1" min="1" max="100">
-              <div class="error-text">Min. 1.</div>
+              <div class="error-text">Enter 1 to 100.</div>
             </div>
           </div>
         </fieldset>
@@ -654,21 +193,21 @@
   <div class="view" id="successView">
     <div class="card">
       <div class="success-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 12.5L9.5 18L20 6" stroke="#17B26A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M4 12.5L9.5 18L20 6" stroke="#12A15F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
-      <h1 style="font-size:19px; font-weight:800; margin:0 0 4px;">Request submitted</h1>
-      <p style="font-size:13.5px; color:var(--ink-500); margin:0;">Your request has been sent to the review queue.</p>
+      <h2 class="success-title">Request submitted</h2>
+      <p class="success-sub">Your request has been sent to the review queue. Keep your request number for reference.</p>
 
       <div class="req-chip">
         <span class="code" id="reqCodeDisplay">—</span>
         <button type="button" id="copyBtn">Copy</button>
       </div>
 
-      <div class="result-card" id="successSummary" style="margin-bottom:20px;"></div>
+      <div class="result-card" id="successSummary"></div>
 
-      <button class="again-btn" id="againBtn">Submit another request</button>
+      <button class="again-btn" id="againBtn" type="button">Submit another request</button>
     </div>
   </div>
 
@@ -681,8 +220,8 @@
 
     <div class="card">
       <div class="lookup-row">
-        <input type="text" id="lookupInput" inputmode="numeric" maxlength="8" placeholder="SAP ID e.g. 25012345">
-        <input type="text" id="lookupServiceInput" placeholder="Service number as submitted">
+        <input type="text" id="lookupInput" inputmode="numeric" maxlength="8" placeholder="SAP ID e.g. 25012345" aria-label="SAP ID" autocomplete="off">
+        <input type="text" id="lookupServiceInput" placeholder="Service number as submitted" aria-label="Service number" autocomplete="off">
         <button type="button" id="lookupBtn">Search</button>
       </div>
       <p class="lookup-hint">For your privacy, your SAP ID and service number must both match your submission exactly before any requests are shown.</p>
@@ -690,31 +229,30 @@
       <div class="lookup-result" id="lookupResult"></div>
 
       <div class="empty-state" id="notFound">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <circle cx="11" cy="11" r="7" stroke="#98A2B3" stroke-width="1.6"/>
           <path d="M20 20l-4-4" stroke="#98A2B3" stroke-width="1.6" stroke-linecap="round"/>
         </svg>
-        <div id="notFoundText">No requests found for that SAP ID.<br>Double-check it matches exactly (8 digits, starting with 25).</div>
+        <div id="notFoundText">No requests found for that SAP ID.</div>
       </div>
 
       <div class="notice-box">
-        <strong>Important Notice on Approved Purchase & Exchange Requests
+        <h3>Important notice on approved Purchase &amp; Exchange requests</h3>
+        <p>Please ensure all approved requests are collected by the next working day. Uncollected stock cannot be held or guaranteed as inventory changes continuously.</p>
 
-Please ensure all approved requests are collected by the next working day. Uncollected stock cannot be held or guaranteed as inventory changes continuously.
+        <h4>Collection guidelines</h4>
+        <ul>
+          <li><strong>Purchase requests:</strong> head down to the store or send a representative to collect the item.</li>
+          <li><strong>Exchange requests:</strong> must be collected at HQ in person. Alternatively, inform:
+            <ul>
+              <li><strong>AGS:</strong> Security Executive or Operations Manager</li>
+              <li><strong>ASM:</strong> Team Leader and above</li>
+            </ul>
+          </li>
+        </ul>
 
-Collection Guidelines:
-
-Purchase Requests: Head down to the store or send a representative to collect the item.
-
-Exchange Requests: Must be collected at HQ in person. Alternatively, inform:
-
-AGS: Security Executive or Operations Manager
-
-ASM: Team Leader and above
-
-Tip: Always check your request status online before visiting the store to ensure your item is ready for collection.
-        <br><br>
-        Please avoid scheduling collections during Thursday and Friday morning sessions, as these times are reserved for SO/APO onboarding.
+        <p class="tip"><strong>Tip:</strong> always check your request status online before visiting the store to make sure your item is ready for collection.</p>
+        <p class="tip"><strong>Please note:</strong> avoid scheduling collections during Thursday and Friday morning sessions, as these times are reserved for SO/APO onboarding.</p>
       </div>
     </div>
   </div>
@@ -723,13 +261,13 @@ Tip: Always check your request status online before visiting the store to ensure
 
 <!-- CONFIRM MODAL -->
 <div class="modal-backdrop" id="confirmModal">
-  <div class="modal-box">
-    <div class="modal-title">Confirm submission</div>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-title" id="modalTitle">Confirm submission</div>
     <div class="modal-sub">Double-check before this goes to the review queue.</div>
     <div class="modal-summary" id="modalSummary"></div>
     <div class="modal-actions">
-      <button class="btn-ghost" id="editBtn">Edit</button>
-      <button class="submit" id="confirmSendBtn">
+      <button class="btn-ghost" id="editBtn" type="button">Edit</button>
+      <button class="submit" id="confirmSendBtn" type="button">
         <span class="spinner" id="btnSpinner"></span>
         <span id="btnText">Confirm &amp; send</span>
       </button>
@@ -744,10 +282,11 @@ Tip: Always check your request status online before visiting the store to ensure
 
   let requestType = 'Exchange';
   let photoData = null; // { base64, mimeType, fileName } once a photo is selected
+  let allMaterials = [];
 
   const copy = {
-    Exchange: { title: 'New exchange request', sub: 'Swap out uniform or equipment already issued to you.', legend: 'WHAT ARE YOU REQUESTING' },
-    Purchase: { title: 'New purchase request', sub: 'Buy a new item outright for one of the entities below.', legend: 'ITEM' },
+    Exchange: { title: 'New exchange request', sub: 'Swap out uniform or equipment already issued to you.', legend: 'What are you requesting' },
+    Purchase: { title: 'New purchase request', sub: 'Buy a new item outright for one of the entities below.', legend: 'Item' },
   };
 
   const tabNav = document.getElementById('tabNav');
@@ -759,9 +298,41 @@ Tip: Always check your request status online before visiting the store to ensure
   const materialSelect = document.getElementById('materialSelect');
   const formAlert = document.getElementById('formAlert');
 
+  function escapeHtml(str) {
+    return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+  }
+
+  // Only allow http(s) links for photo URLs coming back from the sheet.
+  function safeUrl(url) {
+    const s = String(url || '').trim();
+    return /^https?:\/\//i.test(s) ? s : '';
+  }
+
+  function showAlert(message) {
+    formAlert.textContent = message;
+    formAlert.classList.add('error');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function clearAlert() {
+    formAlert.textContent = '';
+    formAlert.classList.remove('error');
+  }
+
   function showView(id) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+  }
+
+  function applyRequestTypeUI() {
+    introTitle.textContent = copy[requestType].title;
+    introSub.textContent = copy[requestType].sub;
+    itemLegend.textContent = copy[requestType].legend;
+    const isExchange = requestType === 'Exchange';
+    exchangeExtraFieldset.hidden = !isExchange;
+    exchangePhotoFieldset.hidden = !isExchange;
   }
 
   tabNav.addEventListener('click', (e) => {
@@ -776,23 +347,16 @@ Tip: Always check your request status online before visiting the store to ensure
     }
 
     requestType = btn.dataset.type;
-    introTitle.textContent = copy[requestType].title;
-    introSub.textContent = copy[requestType].sub;
-    itemLegend.textContent = copy[requestType].legend;
-    exchangeExtraFieldset.style.display = requestType === 'Exchange' ? 'block' : 'none';
-    exchangePhotoFieldset.style.display = requestType === 'Exchange' ? 'block' : 'none';
-
+    applyRequestTypeUI();
+    clearAlert();
+    document.querySelectorAll('.field.invalid').forEach(f => f.classList.remove('invalid'));
     refreshMaterialsForCurrentEntity();
-
     showView('requestView');
   });
 
   // ---- Entity -> category eligibility ----
-  // AGS can only request items tagged SO; ASM only APO; AH only AH; items
-  // tagged with all three ("APO / SO / AH") are eligible for any entity.
-  // This applies to BOTH Purchase and Exchange requests — every item in
-  // the Materials Database needs a Category tag for its eligible
-  // entity/entities, or it simply won't appear for anyone.
+  // AGS -> SO, ASM -> APO, AH -> AH. Items tagged "APO / SO / AH" suit all.
+  // (The server re-checks this, so it cannot be bypassed.)
   const ENTITY_CODE = {
     'AETOS Holdings': 'AH',
     'AETOS Security Management': 'APO',
@@ -809,9 +373,18 @@ Tip: Always check your request status online before visiting the store to ensure
     return allMaterials.filter(m => categoryCodes(m.category).includes(code));
   }
 
-  function refreshMaterialsForCurrentEntity() {
-    materialSelect.value = '';
+  function renderMaterialOptions(list, placeholder) {
+    if (list.length === 0) {
+      materialSelect.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>`;
+      materialSelect.disabled = true;
+      return;
+    }
+    materialSelect.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>` +
+      list.map(m => `<option value="${escapeHtml(m.name)}">${escapeHtml(m.name)}</option>`).join('');
+    materialSelect.disabled = false;
+  }
 
+  function refreshMaterialsForCurrentEntity() {
     const entity = document.getElementById('entity').value;
     if (!entity) {
       renderMaterialOptions([], 'Select entity first');
@@ -822,20 +395,6 @@ Tip: Always check your request status online before visiting the store to ensure
   }
 
   document.getElementById('entity').addEventListener('change', refreshMaterialsForCurrentEntity);
-
-  // ---- Load materials ----
-  let allMaterials = [];
-
-  function renderMaterialOptions(list, placeholder) {
-    if (list.length === 0) {
-      materialSelect.innerHTML = `<option value="">${placeholder}</option>`;
-      materialSelect.disabled = true;
-      return;
-    }
-    materialSelect.innerHTML = `<option value="">${placeholder}</option>` +
-      list.map(m => `<option value="${escapeHtml(m.name)}">${escapeHtml(m.name)}</option>`).join('');
-    materialSelect.disabled = false;
-  }
 
   async function loadMaterials() {
     try {
@@ -851,57 +410,78 @@ Tip: Always check your request status online before visiting the store to ensure
       refreshMaterialsForCurrentEntity();
 
     } catch (err) {
-      formAlert.textContent = 'Could not load the item list. Refresh to try again.';
-      formAlert.classList.add('error');
+      showAlert('Could not load the item list. Refresh to try again.');
       materialSelect.innerHTML = '<option value="">Failed to load</option>';
     }
   }
 
-  // ---- Auto-capitalize name fields (Title Case), regardless of how typed ----
+  // ---- Auto-capitalize name (Title Case) ----
   function toTitleCase(str) {
     return str
       .toLowerCase()
       .replace(/(^|[\s\-'.])([a-z])/g, (match, sep, letter) => sep + letter.toUpperCase());
   }
 
-  function autoCapitalize(input) {
-    input.addEventListener('blur', () => {
-      const value = input.value.trim();
-      if (value) input.value = toTitleCase(value);
+  const staffNameInput = document.getElementById('staffName');
+  staffNameInput.addEventListener('blur', () => {
+    const value = staffNameInput.value.trim();
+    if (value) staffNameInput.value = toTitleCase(value);
+  });
+
+  // Digits only for SAP ID fields
+  ['sapId', 'lookupInput'].forEach(id => {
+    document.getElementById(id).addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '');
     });
-  }
-
-  autoCapitalize(document.getElementById('staffName'));
-
-  function escapeHtml(str) {
-    return String(str).replace(/[&<>"']/g, c => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-    }[c]));
-  }
-
-  loadMaterials();
+  });
 
   // ---- Photo upload (Exchange only) ----
-  function fileToBase64(file) {
+  // Phone photos are often 4-10 MB. Shrink to max 1600px JPEG first so the
+  // upload is fast and stays within Apps Script request limits.
+  function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(String(reader.result).split(',')[1]);
       reader.onerror = () => reject(new Error('File read failed'));
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(blob);
     });
+  }
+
+  async function prepareImage(file) {
+    if (!file.type || !file.type.startsWith('image/')) {
+      throw new Error('Please choose an image file.');
+    }
+    try {
+      const bitmap = await createImageBitmap(file);
+      const maxSide = 1600;
+      const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(bitmap.width * scale);
+      canvas.height = Math.round(bitmap.height * scale);
+      canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+      if (!blob) throw new Error('Compression failed');
+      return { blob, mimeType: 'image/jpeg', fileName: file.name.replace(/\.[^.]+$/, '') + '.jpg' };
+    } catch (err) {
+      // Browser couldn't decode it (e.g. HEIC) — fall back to the original if small enough.
+      if (file.size > 6 * 1024 * 1024) throw new Error('That photo is too large. Please choose a smaller image.');
+      return { blob: file, mimeType: file.type, fileName: file.name };
+    }
   }
 
   document.getElementById('itemPhoto').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) { photoData = null; return; }
     try {
-      const base64 = await fileToBase64(file);
-      photoData = { base64, mimeType: file.type || 'image/jpeg', fileName: file.name };
+      const prepared = await prepareImage(file);
+      const base64 = await blobToBase64(prepared.blob);
+      photoData = { base64, mimeType: prepared.mimeType, fileName: prepared.fileName };
       setInvalid('field-itemPhoto', false);
+      clearAlert();
     } catch (err) {
       photoData = null;
-      formAlert.textContent = 'Could not read that photo. Try a different file.';
-      formAlert.classList.add('error');
+      e.target.value = '';
+      showAlert(err.message || 'Could not read that photo. Try a different file.');
     }
   });
 
@@ -936,9 +516,11 @@ Tip: Always check your request status online before visiting the store to ensure
     let ok = true;
     if (!validateSapId()) ok = false;
 
+    const qtyValue = Number(document.getElementById('qty').value);
+
     let checks = [
       ['field-material', document.getElementById('materialSelect').value],
-      ['field-qty', document.getElementById('qty').value && Number(document.getElementById('qty').value) >= 1],
+      ['field-qty', Number.isInteger(qtyValue) && qtyValue >= 1 && qtyValue <= 100],
       ['field-staffName', document.getElementById('staffName').value.trim()],
       ['field-serviceNumber', document.getElementById('serviceNumber').value.trim()],
       ['field-contactNumber', document.getElementById('contactNumber').value.trim()],
@@ -961,13 +543,18 @@ Tip: Always check your request status online before visiting the store to ensure
       if (invalid) ok = false;
     });
 
+    if (!ok) {
+      const firstBad = document.querySelector('.field.invalid');
+      if (firstBad) firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
     return ok;
   }
 
   function buildPayload() {
     const base = {
       materialName: document.getElementById('materialSelect').value,
-      qty: document.getElementById('qty').value,
+      qty: Number(document.getElementById('qty').value),
       requestType: requestType,
       sapId: document.getElementById('sapId').value.trim(),
       staffName: document.getElementById('staffName').value.trim(),
@@ -991,43 +578,51 @@ Tip: Always check your request status online before visiting the store to ensure
     return base;
   }
 
+  // Build the label/value rows used by both the confirm modal and success screen.
+  function summaryRows(p) {
+    const rows = [
+      ['Staff name', p.staffName],
+      ['SAP ID', p.sapId],
+      ['Service number', p.serviceNumber],
+      ['Entity', p.entity],
+      ['Item', p.materialName],
+      ['Quantity', p.qty],
+    ];
+    if (p.requestType === 'Exchange') {
+      rows.push(['Reason', p.reasonForExchange]);
+      rows.push(['Photo', p.photoFileName || 'Not attached']);
+    }
+    rows.unshift(['Request type', p.requestType]);
+    return rows;
+  }
+
+  function rowsToHtml(rows, rowClass) {
+    return rows.map(([k, v]) =>
+      `<div class="${rowClass}"><span>${escapeHtml(k)}</span><span>${escapeHtml(v)}</span></div>`
+    ).join('');
+  }
+
   // ---- Confirm modal ----
   const confirmModal = document.getElementById('confirmModal');
   const modalSummary = document.getElementById('modalSummary');
 
   document.getElementById('reviewBtn').addEventListener('click', () => {
-    formAlert.classList.remove('error');
+    clearAlert();
     if (!validate()) return;
 
-    const p = buildPayload();
-    const rows = requestType === 'Exchange'
-      ? [
-          ['Request type', 'Exchange'],
-          ['Staff name', p.staffName],
-          ['SAP ID', p.sapId],
-          ['Service number', p.serviceNumber],
-          ['Entity', p.entity],
-          ['Item', p.materialName],
-          ['Quantity', p.qty],
-          ['Reason', p.reasonForExchange],
-          ['Photo', photoData ? escapeHtml(photoData.fileName) : 'Not attached'],
-        ]
-      : [
-          ['Request type', 'Purchase'],
-          ['Staff name', p.staffName],
-          ['SAP ID', p.sapId],
-          ['Service number', p.serviceNumber],
-          ['Entity', p.entity],
-          ['Item', p.materialName],
-          ['Quantity', p.qty],
-        ];
-
-    modalSummary.innerHTML = rows.map(([k, v]) => `<div class="row"><span>${k}</span><span>${v}</span></div>`).join('');
+    modalSummary.innerHTML = rowsToHtml(summaryRows(buildPayload()), 'row');
     confirmModal.classList.add('active');
   });
 
   document.getElementById('editBtn').addEventListener('click', () => {
     confirmModal.classList.remove('active');
+  });
+
+  // Click outside the box (but not while sending) closes the modal
+  confirmModal.addEventListener('click', (e) => {
+    if (e.target === confirmModal && !document.getElementById('confirmSendBtn').disabled) {
+      confirmModal.classList.remove('active');
+    }
   });
 
   document.getElementById('confirmSendBtn').addEventListener('click', executeSubmission);
@@ -1044,6 +639,8 @@ Tip: Always check your request status online before visiting the store to ensure
     try {
       const payload = buildPayload();
 
+      // No Content-Type header on purpose: keeps this a "simple" request so
+      // the browser skips the CORS preflight that Apps Script can't answer.
       const res = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
         body: JSON.stringify(payload),
@@ -1056,14 +653,13 @@ Tip: Always check your request status online before visiting the store to ensure
       showSuccess(payload, result.requestId);
 
       document.getElementById('requestForm').reset();
-      materialSelect.value = '';
+      document.querySelectorAll('.field.invalid').forEach(f => f.classList.remove('invalid'));
       photoData = null;
       refreshMaterialsForCurrentEntity();
 
     } catch (err) {
       confirmModal.classList.remove('active');
-      formAlert.textContent = 'Could not submit: ' + err.message;
-      formAlert.classList.add('error');
+      showAlert('Could not submit: ' + err.message);
     } finally {
       btn.disabled = false;
       spinner.style.display = 'none';
@@ -1073,40 +669,22 @@ Tip: Always check your request status online before visiting the store to ensure
 
   function showSuccess(payload, requestId) {
     document.getElementById('reqCodeDisplay').textContent = requestId;
-
-    const rows = requestType === 'Exchange'
-      ? [
-          ['Staff name', payload.staffName],
-          ['Service number', payload.serviceNumber],
-          ['Entity', payload.entity],
-          ['Item', payload.materialName],
-          ['Quantity', payload.qty],
-          ['Reason', payload.reasonForExchange],
-          ['Photo', payload.photoFileName ? escapeHtml(payload.photoFileName) : 'Not attached'],
-        ]
-      : [
-          ['Staff name', payload.staffName],
-          ['Service number', payload.serviceNumber],
-          ['Entity', payload.entity],
-          ['Item', payload.materialName],
-          ['Quantity', payload.qty],
-        ];
-
-    document.getElementById('successSummary').innerHTML = rows.map(([k, v]) =>
-      `<div class="result-row"><span>${k}</span><span>${v}</span></div>`
-    ).join('');
-
+    document.getElementById('successSummary').innerHTML = rowsToHtml(summaryRows(payload), 'result-row');
     showView('successView');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   document.getElementById('copyBtn').addEventListener('click', () => {
     const code = document.getElementById('reqCodeDisplay').textContent;
-    navigator.clipboard.writeText(code).then(() => {
-      const btn = document.getElementById('copyBtn');
-      const original = btn.textContent;
-      btn.textContent = 'Copied!';
-      setTimeout(() => { btn.textContent = original; }, 1500);
-    });
+    const btn = document.getElementById('copyBtn');
+    const original = btn.textContent;
+    const done = (text) => { btn.textContent = text; setTimeout(() => { btn.textContent = original; }, 1500); };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(() => done('Copied!'), () => done('Copy failed'));
+    } else {
+      done('Copy failed');
+    }
   });
 
   document.getElementById('againBtn').addEventListener('click', () => {
@@ -1123,29 +701,29 @@ Tip: Always check your request status online before visiting the store to ensure
 
   function buildRecordsHtml(requests) {
     return requests.map(r => {
-      const statusClass = r.status === 'Out of Stock' ? 'OutOfStock' : r.status;
+      const statusClass = r.status === 'Out of Stock' ? 'OutOfStock' : escapeHtml(r.status);
       const rows = [['Item', r.materialName], ['Quantity', r.qty]];
-      if (r.requestType === 'Purchase' && r.entity) rows.push(['Entity', r.entity]);
-      // Reason for exchange is only surfaced while it's actionable —
-      // i.e. the request is still Pending, or was Rejected.
+      if (r.entity) rows.push(['Entity', r.entity]);
+      // Reason is only shown while actionable (Pending or Rejected).
       if (r.requestType === 'Exchange' && r.reason && (r.status === 'Pending' || r.status === 'Rejected')) {
         rows.push(['Reason', r.reason]);
       }
 
-      const photoRow = r.photoLink
-        ? `<div class="record-row"><span>Photo</span><span><a href="${r.photoLink}" target="_blank" rel="noopener">View photo</a></span></div>`
+      const link = safeUrl(r.photoLink);
+      const photoRow = link
+        ? `<div class="record-row"><span>Photo</span><span><a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">View photo</a></span></div>`
         : '';
 
       return `
         <div class="record-card ${statusClass}">
           <div class="record-top">
             <div>
-              <span class="record-code">${r.requestId}</span>
-              <span class="record-type">${r.requestType}</span>
+              <span class="record-code">${escapeHtml(r.requestId)}</span>
+              <span class="record-type">${escapeHtml(r.requestType)}</span>
             </div>
-            <span class="status-pill ${statusClass}">${r.status}</span>
+            <span class="status-pill ${statusClass}">${escapeHtml(r.status)}</span>
           </div>
-          ${rows.map(([k, v]) => `<div class="record-row"><span>${k}</span><span>${v}</span></div>`).join('')}
+          ${rowsToHtml(rows, 'record-row')}
           ${photoRow}
         </div>
       `;
@@ -1192,6 +770,10 @@ Tip: Always check your request status online before visiting the store to ensure
   lookupBtn.addEventListener('click', checkStatus);
   lookupInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkStatus(); });
   lookupServiceInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkStatus(); });
+
+  // ---- Init ----
+  applyRequestTypeUI();
+  loadMaterials();
 </script>
 
 </body>
